@@ -60,7 +60,7 @@ void CPU_find_max_error(T* a, T* b, size_t const len, T& maxval, size_t& maxloc)
   maxval = T(0);
   maxloc = 0;
 
-  // Find the maximum error and its index
+  // Find the maximum error && its index
   for (size_t i = 0; i < len; ++i) {
     T error = std::fabs(a[i] - b[i]);
     if (error > maxval) maxval = error, maxloc = i;

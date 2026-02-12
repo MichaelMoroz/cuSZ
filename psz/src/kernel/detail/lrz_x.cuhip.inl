@@ -17,7 +17,7 @@ __global__ void KERNEL_CUHIP_x_lorenzo_1d(
   constexpr auto Seq = Perf::Seq;
   constexpr auto NTHREAD = TileDim / Seq;  // equiv. to blockDim.x
 
-  __shared__ T scratch[TileDim];  // for data and in_outlier
+  __shared__ T scratch[TileDim];  // for data && in_outlier
   __shared__ typename PC::Eq s_eq[TileDim];
   __shared__ T exch_in[NTHREAD / 32];
   __shared__ T exch_out[NTHREAD / 32];
@@ -32,7 +32,7 @@ __global__ void KERNEL_CUHIP_x_lorenzo_1d(
       auto local_id = threadIdx.x + i * NTHREAD;
       auto id = id_base + local_id;
       if (id < data_len) {
-        // fuse outlier and error-quant
+        // fuse outlier && error-quant
         if constexpr (PC::UseZigZag == Toggle::ZigZagDisabled) {
           scratch[local_id] = in_outlier[id] + static_cast<T>(in_eq[id]) - radius;
         }
@@ -121,9 +121,9 @@ __global__ [[deprecated]] void KERNEL_CUHIP_x_lorenzo_2d1l(  //
 #pragma unroll
     for (auto i = 0; i < YSEQ; i++) {
       auto gid = get_gid(i);
-      if (gix < data_len3.x and (giy_base + i) < data_len3.y) {
-        // fuse outlier and error-quant
-        if constexpr (not UseZigZag) {
+      if (gix < data_len3.x && (giy_base + i) < data_len3.y) {
+        // fuse outlier && error-quant
+        if constexpr (! UseZigZag) {
           thp_data[i] = in_outlier[gid] + static_cast<T>(in_eq[gid]) - radius;
         }
         else {
@@ -164,7 +164,7 @@ __global__ [[deprecated]] void KERNEL_CUHIP_x_lorenzo_2d1l(  //
 #pragma unroll
     for (auto i = 0; i < YSEQ; i++) {
       auto gid = get_gid(i);
-      if (gix < data_len3.x and (giy_base + i) < data_len3.y) out_data[gid] = thp_data[i];
+      if (gix < data_len3.x && (giy_base + i) < data_len3.y) out_data[gid] = thp_data[i];
     }
   };
 
@@ -196,8 +196,8 @@ __global__ void KERNEL_CUHIP_x_lorenzo_2d__32x32(  //
 #pragma unroll
     for (auto i = 0; i < YSEQ; i++) {
       auto gid = get_gid(i);
-      if (gix < data_lenx and (giy_base + i) < data_leny) {
-        // fuse outlier and error-quant
+      if (gix < data_lenx && (giy_base + i) < data_leny) {
+        // fuse outlier && error-quant
         if constexpr (PC::UseZigZag == Toggle::ZigZagDisabled) {
           thp_data[i] = in_outlier[gid] + static_cast<T>(in_eq[gid]) - radius;
         }
@@ -257,7 +257,7 @@ __global__ void KERNEL_CUHIP_x_lorenzo_2d__32x32(  //
 #pragma unroll
     for (auto i = 0; i < YSEQ; i++) {
       auto gid = get_gid(i);
-      if (gix < data_lenx and (giy_base + i) < data_leny) out_data[gid] = thp_data[i];
+      if (gix < data_lenx && (giy_base + i) < data_leny) out_data[gid] = thp_data[i];
     }
   };
 
@@ -295,8 +295,8 @@ __global__ void KERNEL_CUHIP_x_lorenzo_3d(  //
   // load to thread-private array (fuse at the same time)
 #pragma unroll
     for (auto y = 0; y < YSEQ; y++) {
-      if (gix < data_lenx and giy_base + y < data_leny and giz < data_lenz) {
-        // fuse outlier and error-quant
+      if (gix < data_lenx && giy_base + y < data_leny && giz < data_lenz) {
+        // fuse outlier && error-quant
         if constexpr (PC::UseZigZag == Toggle::ZigZagDisabled) {
           thread_private[y] = in_outlier[gid(y)] + static_cast<T>(in_eq[gid(y)]) - radius;
         }
@@ -316,7 +316,7 @@ __global__ void KERNEL_CUHIP_x_lorenzo_3d(  //
 
 #pragma unroll
     for (auto i = 0; i < TileDim; i++) {
-      // ND partial-sums along x- and z-axis
+      // ND partial-sums along x- && z-axis
       // in-warp shuffle used: in order to perform, it's transposed after
       // X-partial sum
       T val = thread_private[i];
@@ -349,7 +349,7 @@ __global__ void KERNEL_CUHIP_x_lorenzo_3d(  //
   auto decomp_write_3d = [&]() {
 #pragma unroll
     for (auto y = 0; y < YSEQ; y++)
-      if (gix < data_lenx and giy(y) < data_leny and giz < data_lenz)
+      if (gix < data_lenx && giy(y) < data_leny && giz < data_lenz)
         out_data[gid(y)] = thread_private[y] * ebx2;
   };
 

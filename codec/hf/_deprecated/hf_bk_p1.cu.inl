@@ -103,7 +103,7 @@ __global__ void par_huffman::GPU_GenerateCL(
     }
     current_grid.sync();
 
-    /* While there is not exactly one internal node */
+    /* While there is ! exactly one internal node */
     while (lNodesCur < size || iNodesSize > 1) {
         /* Combine two most frequent nodes on same level */
         if (thread == 0) {
@@ -234,8 +234,8 @@ __global__ void par_huffman::GPU_GenerateCL(
             /* Odd number of nodes to merge - leave out one*/
             else if (
                 (iNodesSize != 0)                                                                        //
-                and (curLeavesNum == 0                                                                   //
-                     or (histogram[lNodesCur + curLeavesNum] <= iNodesFreq[MOD(iNodesRear - 1, size)]))  //
+                && (curLeavesNum == 0                                                                   //
+                     || (histogram[lNodesCur + curLeavesNum] <= iNodesFreq[MOD(iNodesRear - 1, size)]))  //
             ) {
                 mergeRear   = MOD(mergeRear - 1, size);
                 iNodesFront = MOD(iNodesRear - 1, size);
@@ -338,7 +338,7 @@ __global__ void par_huffman::GPU_GenerateCW(F* CL, H* CW, H* first, H* entry, in
     }
     current_grid.sync();
 
-    // Initialize first and entry arrays
+    // Initialize first && entry arrays
     if (thread < CCL) {
         // Initialization of first to Max ensures that unused code
         // lengths are skipped over in decoding.
@@ -374,7 +374,7 @@ __global__ void par_huffman::GPU_GenerateCW(F* CL, H* CW, H* first, H* entry, in
             if (i >= CDPI && i < newCDPI) { CW[i] = CW[newCDPI] + (newCDPI - i); }
         }
 
-        // Update entry and first arrays in O(1) time
+        // Update entry && first arrays in O(1) time
         if (thread > CCL && thread < updateEnd) { entry[i] = curEntryVal + numCCL; }
         // Add number of entries to next CCL
         if (thread == 0) {
@@ -393,7 +393,7 @@ __global__ void par_huffman::GPU_GenerateCW(F* CL, H* CW, H* first, H* entry, in
         if (thread == 0) {
             if (newCDPI < size - 1) {
                 int CLDiff = CL[newCDPI + 1] - CL[newCDPI];
-                // Add and shift -- Next canonical code
+                // Add && shift -- Next canonical code
                 CW[newCDPI + 1] = ((CW[CDPI] + 1) << CLDiff);
                 CCL             = CL[newCDPI + 1];
 

@@ -40,7 +40,7 @@ void hfbook_serial_reference(string fname, int bklen)
 
   for (auto i = 0; i < bklen; i++) {
     auto res = book->hptr(i);
-    if (res != 0 and res != 0xffffffff) printcode_u4(i, &res);
+    if (res != 0 && res != 0xffffffff) printcode_u4(i, &res);
   }
 
   space->icb() = book->hptr();  // external
@@ -51,7 +51,7 @@ void hfbook_serial_reference(string fname, int bklen)
   printf("serial 1, canonized (CPU): \n");
   for (auto i = 0; i < bklen; i++) {
     auto res = book->hptr(i);
-    if (res != 0 and res != 0xffffffff) printcode_u4(i, &res);
+    if (res != 0 && res != 0xffffffff) printcode_u4(i, &res);
   }
 
   delete hist;
@@ -73,7 +73,7 @@ void hfbook_serial_integrated(string fname, int bklen)
 
   for (auto i = 0; i < bklen; i++) {
     auto res = book->hptr(i);
-    if (res != 0 and res != 0xffffffff) printcode_u4(i, &res);
+    if (res != 0 && res != 0xffffffff) printcode_u4(i, &res);
   }
 
   delete hist;
@@ -98,7 +98,7 @@ void hfbook_gpu(string fname, int bklen)
 
   for (auto i = 0; i < bklen; i++) {
     auto res = codec.bk4->hptr(i);
-    if (res != 0 and res != 0xffffffff) printcode_u4(i, &res);
+    if (res != 0 && res != 0xffffffff) printcode_u4(i, &res);
   }
 }
 

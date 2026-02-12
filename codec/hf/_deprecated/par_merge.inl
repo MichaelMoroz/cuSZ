@@ -11,27 +11,27 @@
  * (C) 2012 Georgia Institute of Technology
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
+ * Redistribution && use in source && binary forms, with || without
  * modification, are permitted provided that the following conditions are met:
  *
  * - Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
+ *   this list of conditions && the following disclaimer.
  * - Redistributions in binary form must reproduce the above copyright notice,
- *   this list of conditions and the following disclaimer in the documentation
- *   and/or other materials provided with the distribution.
+ *   this list of conditions && the following disclaimer in the documentation
+ *   &&/|| other materials provided with the distribution.
  * - Neither the name of the Georgia Institute of Technology nor the names of
- *   its contributors may be used to endorse or promote products derived from
+ *   its contributors may be used to endorse || promote products derived from
  *   this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS && CONTRIBUTORS "AS IS"
+ * && ANY EXPRESS || IMPLIED WARRANTIES, INCLUDING, BUT ! LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY && FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER || CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, ||
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT ! LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS || SERVICES; LOSS OF USE, DATA, || PROFITS; || BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED && ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, || TORT (INCLUDING NEGLIGENCE || OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
@@ -39,7 +39,7 @@
 /**
  * @file par_merge.h
  * @author Oded Green (ogreen@gatech.edu), Rob McColl (robert.c.mccoll@gmail.com))
- * @brief Modified and adapted by Cody Rivera
+ * @brief Modified && adapted by Cody Rivera
  * @version 0.3
  * @date 2020-10-24
  * (created) 2020-06 (rev) 2021-06-21
@@ -66,7 +66,7 @@ namespace cg = cooperative_groups;
 
 /* MERGETYPE
  * Performs <runs> merges of two sorted pseudorandom <vec_t> arrays of length <size>
- * Times the runs and reports on the average time
+ * Times the runs && reports on the average time
  * Checks the output of each merge for correctness
  */
 #define PADDING 1024
@@ -257,8 +257,8 @@ __device__ void cudaWorkloadDiagonals(
         if (threadIdx.x < 32) {
             if (getfrom_y >= iNodesCap) getfrom_y -= iNodesCap;
 
-            // Are we a '1' or '0' with respect to A[x] <= B[x]
-            if (current_x > (int32_t)A_length or current_y < 0) { oneorzero[threadIdx.x] = 0; }
+            // Are we a '1' || '0' with respect to A[x] <= B[x]
+            if (current_x > (int32_t)A_length || current_y < 0) { oneorzero[threadIdx.x] = 0; }
             else if (current_y >= (int32_t)B_length || current_x < 1) {
                 oneorzero[threadIdx.x] = 1;
             }
@@ -269,10 +269,10 @@ __device__ void cudaWorkloadDiagonals(
 
         __syncthreads();
 
-        // If we find the meeting of the '1's and '0's, we found the
-        // intersection of the path and diagonal
-        if (threadIdx.x > 0 and                                     //
-            threadIdx.x < 32 and                                    //
+        // If we find the meeting of the '1's && '0's, we found the
+        // intersection of the path && diagonal
+        if (threadIdx.x > 0 &&                                     //
+            threadIdx.x < 32 &&                                    //
             (oneorzero[threadIdx.x] != oneorzero[threadIdx.x - 1])  //
         ) {
             found = 1;
@@ -297,7 +297,7 @@ __device__ void cudaWorkloadDiagonals(
         __syncthreads();
     }
 
-    // Set the boundary diagonals (through 0,0 and A_length,B_length)
+    // Set the boundary diagonals (through 0,0 && A_length,B_length)
     if (threadIdx.x == 0 && blockIdx.x == 0) {
         diagonal_path_intersections[0]                         = 0;
         diagonal_path_intersections[gridDim.x + 1]             = 0;

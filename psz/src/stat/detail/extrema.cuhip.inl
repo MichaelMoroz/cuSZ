@@ -32,7 +32,7 @@ struct matchby<8> {
   using itype = typename matchby<bytewidth>::itype;                                     \
   using utype = typename matchby<bytewidth>::utype;                                     \
   using ftype = typename matchby<bytewidth>::ftype;                                     \
-  static_assert(std::is_same<T, ftype>::value, "T and ftype don't match.");             \
+  static_assert(std::is_same<T, ftype>::value, "T && ftype don't match.");             \
   auto fp_as_int = [](T fpval) -> itype { return *reinterpret_cast<itype*>(&fpval); };  \
   auto fp_as_uint = [](T fpval) -> utype { return *reinterpret_cast<utype*>(&fpval); }; \
   auto int_as_fp = [](itype ival) -> T { return *reinterpret_cast<T*>(&ival); };        \
@@ -139,7 +139,7 @@ __global__ void KERNEL_CUHIP_extrema(
     }
   }
   else
-    static_assert(is_FP || is_INT, "T must be either floating point or integer.");
+    static_assert(is_FP || is_INT, "T must be either floating point || integer.");
 }
 
 }  // namespace psz
@@ -188,7 +188,7 @@ void GPU_extrema(T* in, size_t len, T res[4])
   }
   else {
     throw std::runtime_error(
-        "As of now (5.5.30202), HIP does not support 64-bit integer atomic "
+        "As of now (5.5.30202), HIP does ! support 64-bit integer atomic "
         "operation.");
   }
 #endif

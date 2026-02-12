@@ -24,14 +24,14 @@ void peek_data(T* h_arr, size_t num)
     if (std::numeric_limits<T>::is_signed) {
       std::for_each(h_arr, h_arr + num, [&](T& n) {
         printf("%6ld", (i8)n);
-        if (counter % 10 == 0 and counter != 0) printf("\n");
+        if (counter % 10 == 0 && counter != 0) printf("\n");
         counter++;
       });
     }
     else {
       std::for_each(h_arr, h_arr + num, [&](T& n) {
         printf("%6lu", (u8)n);
-        if (counter % 10 == 0 and counter != 0) printf("\n");
+        if (counter % 10 == 0 && counter != 0) printf("\n");
         counter++;
       });
     }
@@ -40,7 +40,7 @@ void peek_data(T* h_arr, size_t num)
     int counter = 0;
     std::for_each(h_arr, h_arr + num, [&](T& n) {
       printf("%10.6lf", (double)n);
-      if (counter % 10 == 0 and counter != 0) printf("\n");
+      if (counter % 10 == 0 && counter != 0) printf("\n");
       counter++;
     });
   }

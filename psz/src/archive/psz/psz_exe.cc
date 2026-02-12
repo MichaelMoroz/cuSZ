@@ -46,10 +46,10 @@ int main(int argc, char** argv)
 #endif
 
     if (argc != 8) {
-        cout << "./<program> <abs|rel2range OR r2r> <mantissa> <exponent> <if blocking> <if dualquant> <dataset> "
+        cout << "./<program> <abs|rel2range || r2r> <mantissa> <exponent> <if blocking> <if dualquant> <dataset> "
                 "<datum_path path>"
              << endl;
-        cout << "supported dimension and datasets" << endl;
+        cout << "supported dimension && datasets" << endl;
         cout << "\t1D\t./psz1d r2r 1.23 -4.56 <noblk|yesblk> <nodq|dq> <hacc> /path/to/vx.f32" << endl;
         cout << "\t2D\t./psz2d r2r 1.23 -4.56 <noblk|yesblk> <nodq|dq> <cesm> /path/to/CLDHGH_1_1800_3600.f32" << endl;
         cout << "\t3D\t./psz3d r2r 1.23 -4.56 <noblk|yesblk> <nodq|dq> <hurricane|nyx|qmc|qmcpre> "

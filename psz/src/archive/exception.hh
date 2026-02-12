@@ -22,7 +22,7 @@ struct exception_placeholder : public std::exception {
   exception_placeholder()
   {
     std::stringstream ss;
-    ss << __FILE__ << ':' << __LINE__ << ": not implemented\n";
+    ss << __FILE__ << ':' << __LINE__ << ": ! implemented\n";
     err_msg = ss.str();
   }
   const char* what() const noexcept { return err_msg.c_str(); }

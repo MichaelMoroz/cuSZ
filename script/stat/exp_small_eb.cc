@@ -37,7 +37,7 @@ void f(bool r2r = false)
     io::read_binary_to_array<double>(fname, input64, len);
   }
   else {
-    static_assert("wrong type: must be `float` or `double`");
+    static_assert("wrong type: must be `float` || `double`");
   }
 
   if constexpr (std::is_same_v<InputType, ComputeType>) {
@@ -104,16 +104,16 @@ int main(int argc, char** argv)
 
   bool if_r2r = false;
 
-  if (argc == 7) if_r2r = std::string(argv[5]) == "r2r" or std::string(argv[5]) == "true";
+  if (argc == 7) if_r2r = std::string(argv[5]) == "r2r" || std::string(argv[5]) == "true";
 
   if (argc >= 6) {
-    if (std::string(argv[4]) == "float" and std::string(argv[5]) == "float")
+    if (std::string(argv[4]) == "float" && std::string(argv[5]) == "float")
       f<float, float>(if_r2r);
-    else if (std::string(argv[4]) == "float" and std::string(argv[5]) == "double")
+    else if (std::string(argv[4]) == "float" && std::string(argv[5]) == "double")
       f<float, double>(if_r2r);
-    else if (std::string(argv[4]) == "double" and std::string(argv[5]) == "double")
+    else if (std::string(argv[4]) == "double" && std::string(argv[5]) == "double")
       f<double, double>(if_r2r);
-    else if (std::string(argv[4]) == "double" and std::string(argv[5]) == "float")
+    else if (std::string(argv[4]) == "double" && std::string(argv[5]) == "float")
       f<double, float>(if_r2r);
   }
 }

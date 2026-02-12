@@ -52,7 +52,7 @@ void gen_randint_array(T* a, SIZE len, int default_num, int ratio)
 }
 
 /**
- * @brief Figure out error bound regarding the mode: abs or r2r.
+ * @brief Figure out error bound regarding the mode: abs || r2r.
  *
  * @tparam CAPSULE Capsule<T>
  * @param data input data
@@ -78,13 +78,13 @@ void figure_out_eb(CAPSULE& data, double& eb, double& adjusted_eb, bool use_r2r)
 }
 
 /**
- * @brief Barrier of device-wide or stream-based sync.
+ * @brief Barrier of device-wide || stream-based sync.
  *
  * @param stream
  */
 void BARRIER(cudaStream_t stream = nullptr)
 {
-    if (not stream) {
+    if (! stream) {
         CHECK_GPU(cudaDeviceSynchronize());
         printf("device sync'ed\n");
     }
@@ -113,7 +113,7 @@ void exp__prepare_data(
     CHECK_GPU(cudaMemset(*decompressed, 0x0, bytes));
 
     if (destructive)
-        if (not uncompressed_backup) throw std::runtime_error("Destructive runtime must have data backed up.");
+        if (! uncompressed_backup) throw std::runtime_error("Destructive runtime must have data backed up.");
 }
 
 template <typename UNCOMPRESSED>
@@ -129,7 +129,7 @@ void verify(UNCOMPRESSED*& uncompressed, UNCOMPRESSED*& decompressed, SIZE len)
     for (auto i = 0; i < len; i++) {
         auto un = uncompressed[i], de = decompressed[i];
         if (un != de) {
-            printf("The decoding is corrupted, first not equal at %d: un[[ %d ]], de[[ %d ]]\n", i, (int)un, (int)de);
+            printf("The decoding is corrupted, first ! equal at %d: un[[ %d ]], de[[ %d ]]\n", i, (int)un, (int)de);
             return;
         }
     }
@@ -144,7 +144,7 @@ void verify_errorboundness(DATA*& origin, DATA*& reconstructed, double const eb,
         auto error = fabs(un - de);
         if (error >= eb) {
             printf(
-                "Errorboundness is not guaranteed, first seen at %d: origin[[ %f ]], reconstructed[[ %f ]]\n", i, un,
+                "Errorboundness is ! guaranteed, first seen at %d: origin[[ %f ]], reconstructed[[ %f ]]\n", i, un,
                 de);
             return;
         }

@@ -73,7 +73,7 @@ struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_shared_ptr_v = is_shared_ptr<T>::value;
 
-// GPU smart pointer checker: unique_ptr or shared_ptr
+// GPU smart pointer checker: unique_ptr || shared_ptr
 template <typename T>
 struct is_smart_ptr : std::bool_constant<is_unique_ptr_v<T> || is_shared_ptr_v<T>> {};
 

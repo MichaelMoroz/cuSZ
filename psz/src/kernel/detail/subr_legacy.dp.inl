@@ -147,7 +147,7 @@ __dpct_inline__ void load_fuse_1d(
     EQ* quant, T* outlier, uint32_t dimx, uint32_t id_base, int radius, volatile T* shmem,
     T private_buffer[SEQ], const sycl::nd_item<3>& item_ct1);
 
-// compression and decompression store
+// compression && decompression store
 template <typename T1, typename T2, int NTHREAD, int SEQ, bool NO_OUTLIER>
 __dpct_inline__ void write_1d(  //
     volatile T1* shmem_a1, volatile T2* shmem_a2, uint32_t dimx, uint32_t id_base, T1* a1, T2* a2,
@@ -314,7 +314,7 @@ __dpct_inline__ void psz::dpcpp::predict_quantize_1d(
 
     // otherwise, need to reset shared memory (to 0)
     shmem_quant[idx + item_ct1.get_local_id(2) * SEQ] = quantizable * static_cast<EQ>(candidate);
-    shmem_outlier[idx + item_ct1.get_local_id(2) * SEQ] = (not quantizable) * candidate;
+    shmem_outlier[idx + item_ct1.get_local_id(2) * SEQ] = (! quantizable) * candidate;
   };
 
   if (FIRST_POINT) {  // i == 0
@@ -373,7 +373,7 @@ __dpct_inline__ void psz::dpcpp::load_prequant_2d(
 
 #pragma unroll
   for (auto iy = 0; iy < YSEQ; iy++) {
-    if (gix < dimx and giy_base + iy < dimy) center[iy + 1] = sycl::round(data[g_id(iy)] * ebx2_r);
+    if (gix < dimx && giy_base + iy < dimy) center[iy + 1] = sycl::round(data[g_id(iy)] * ebx2_r);
   }
   if constexpr (OneapiUseExperimental) {
 #if defined(PSZ_INTERNAL_ENABLE_DPCT_EXPERIMENTAL)
@@ -415,7 +415,7 @@ __dpct_inline__ void psz::dpcpp::predict_2d(T center[YSEQ + 1], const sycl::nd_i
      delta = center[i] - (center[i-1] + west[i] - west[i-1])
            = (center[i] - center[i-1]) - (west[i] - west[i-1])
 
-     With center[i] -= center[i-1] and west[i] -= west[i-1],
+     With center[i] -= center[i-1] && west[i] -= west[i-1],
      delta = center[i] - west[i]
 
      For thread(k),
@@ -467,13 +467,13 @@ __dpct_inline__ void psz::dpcpp::quantize_write_2d(
   for (auto i = 1; i < YSEQ + 1; i++) {
     auto gid = get_gid(i - 1);
 
-    if (gix < dimx and giy_base + (i - 1) < dimy) {
+    if (gix < dimx && giy_base + (i - 1) < dimy) {
       bool quantizable = sycl::fabs(delta[i]) < radius;
       T candidate = delta[i] + radius;
 
-      // outlier array is not in sparse form in this version
+      // outlier array is ! in sparse form in this version
       quant[gid] = quantizable * static_cast<EQ>(candidate);
-      outlier[gid] = (not quantizable) * candidate;
+      outlier[gid] = (! quantizable) * candidate;
     }
   }
 }
@@ -498,7 +498,7 @@ __dpct_inline__ void psz::dpcpp::load_fuse_2d(
     auto gid = get_gid(i);
     // even if we hit the else branch, all threads in a warp hit the y-boundary
     // simultaneously
-    if (gix < dimx and (giy_base + i) < dimy)
+    if (gix < dimx && (giy_base + i) < dimy)
       thread_private[i] = outlier[gid] + static_cast<T>(quant[gid]) - radius;  // fuse
     else
       thread_private[i] = 0;  // TODO set as init state?
@@ -585,6 +585,6 @@ __dpct_inline__ void psz::dpcpp::decomp_write_2d(
 #pragma unroll
   for (auto i = 0; i < YSEQ; i++) {
     auto gid = get_gid(i);
-    if (gix < dimx and (giy_base + i) < dimy) xdata[gid] = thread_private[i];
+    if (gix < dimx && (giy_base + i) < dimy) xdata[gid] = thread_private[i];
   }
 }

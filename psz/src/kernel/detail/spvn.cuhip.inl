@@ -18,7 +18,7 @@ __global__ void KERNEL_CUHIP_spvn_gather(
     auto d = in[tid];
     auto quantizable = criteria(d, radius);
 
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = atomicAdd(cn, 1);
       cidx[cur_idx] = tid;
       cval[cur_idx] = d;
@@ -44,8 +44,8 @@ __global__ void KERNEL_CUHIP_spvn_scatter_v2(ValIdx* val_idx, int const nnz, T* 
   auto tid = blockIdx.x * blockDim.x + threadIdx.x;
 
   if (tid < nnz) {
-    auto [val, idx] = val_idx[tid];
-    out[idx] = val;
+    auto cell = val_idx[tid];
+    out[cell.idx] = cell.val;
   }
 }
 

@@ -10,8 +10,12 @@
 #ifndef _PORTABLE_MEM_CXX_MEMOBJ_H
 #define _PORTABLE_MEM_CXX_MEMOBJ_H
 
-// The next-line: failsafe macro check
+// PATH_MAX definition across platforms
+#ifdef _WIN32
+#include <limits.h>
+#else
 #include <linux/limits.h>
+#endif
 
 #include <memory>
 #include <vector>

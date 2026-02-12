@@ -43,7 +43,7 @@ int main(int argc, char** argv)
     cout << static_cast<duration_t>(b - a).count() << " sec\n";
 
     for (auto i = 0; i < res.size(); i++) {
-        if (i != 0 and i % 5 == 0) printf("\n");
+        if (i != 0 && i % 5 == 0) printf("\n");
         printf("%f\t", res[i]);
     }
     cout << '\n';

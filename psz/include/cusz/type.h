@@ -123,13 +123,16 @@ typedef struct psz_interp_params INTERPOLATION_PARAMS;
 // C-style "constructor"
 static inline psz_interp_params make_default_params(void)
 {
-  psz_interp_params p = {
-      .alpha = 1.75,
-      .beta = 4.0,
-      .use_md = {1, 1, 0, 0, 0, 0},
-      .use_natural = {0, 0, 0, 0, 0, 0},
-      .reverse = {0, 0, 0, 0, 0, 0},
-      .auto_tuning = 3};
+  psz_interp_params p = {0};
+  p.alpha = 1.75;
+  p.beta = 4.0;
+  p.use_md[0] = 1;
+  p.use_md[1] = 1;
+  p.use_natural[0] = 0;
+  p.use_natural[1] = 0;
+  p.reverse[0] = 0;
+  p.reverse[1] = 0;
+  p.auto_tuning = 3;
   return p;
 }
 

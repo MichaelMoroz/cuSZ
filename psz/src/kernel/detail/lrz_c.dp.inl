@@ -75,7 +75,7 @@ void KERNEL_DPCPP_c_lorenzo_1d1l(
           }
         }
 
-        // print shared memory data and thread private data
+        // print shared memory data && thread private data
         for (auto ix = 0; ix < Seq; ix++) {
           *stream_ct1 << "shared: " << ix << "\t"
                       << s_data[item_ct1.get_local_id(2) * Seq + ix] << "\n"
@@ -105,7 +105,7 @@ void KERNEL_DPCPP_c_lorenzo_1d1l(
           quantizable * (EqUint)candidate;
     }
 
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx =
           dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(
               cn, 1);
@@ -160,7 +160,7 @@ void KERNEL_DPCPP_c_lorenzo_2d1l(
 // read to private.data (center)
 #pragma unroll
   for (auto iy = 0; iy < Yseq; iy++) {
-    if (gix < len3[2] and giy_base + iy < len3[1])
+    if (gix < len3[2] && giy_base + iy < len3[1])
       center[iy + 1] = sycl::round(data[g_id(iy)] * ebx2_r);
   }
   // same-warp, next-16
@@ -186,7 +186,7 @@ void KERNEL_DPCPP_c_lorenzo_2d1l(
   for (auto i = 1; i < Yseq + 1; i++) {
     auto gid = g_id(i - 1);
 
-    if (gix < len3[2] and giy_base + (i - 1) < len3[1]) {
+    if (gix < len3[2] && giy_base + (i - 1) < len3[1]) {
       bool quantizable = sycl::fabs(center[i]) < radius;
       T candidate;
 
@@ -199,7 +199,7 @@ void KERNEL_DPCPP_c_lorenzo_2d1l(
         eq[gid] = quantizable * (EqUint)candidate;
       }
 
-      if (not quantizable) {
+      if (! quantizable) {
         auto cur_idx =
             dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(
                 cn, 1);
@@ -238,7 +238,7 @@ void KERNEL_DPCPP_c_lorenzo_3d1l(
   auto gid = [&](auto z) { return base_id + z * stride3[0]; };
 
   auto load_prequant_3d = [&](const sycl::nd_item<3>& item_ct1) {
-    if (gix < len3[2] and giy < len3[1]) {
+    if (gix < len3[2] && giy < len3[1]) {
       for (auto z = 0; z < TileDim; z++)
         if (giz(z) < len3[0])
           delta[z + 1] =
@@ -251,7 +251,7 @@ void KERNEL_DPCPP_c_lorenzo_3d1l(
                                     auto gid) {
     bool quantizable = sycl::fabs(delta) < radius;
 
-    if (x < len3[2] and y < len3[1] and z < len3[0]) {
+    if (x < len3[2] && y < len3[1] && z < len3[0]) {
       T candidate;
 
       if constexpr (ZigZag) {
@@ -263,7 +263,7 @@ void KERNEL_DPCPP_c_lorenzo_3d1l(
         eq[gid] = quantizable * (EqUint)candidate;
       }
 
-      if (not quantizable) {
+      if (! quantizable) {
         auto cur_idx =
             dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(
                 cn, 1);

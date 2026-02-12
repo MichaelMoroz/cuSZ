@@ -125,7 +125,7 @@ void Compressor<T>::compress_predict_enc1(psz_ctx* ctx, T* in, void* stream)
 
   /* make outlier count seen on host */
   sync_by_stream(stream);
-  [[deprecated("outlier handling not updated in OOD; use non-OOD instead")]] auto _splen =
+  [[deprecated("outlier handling ! updated in OOD; use non-OOD instead")]] auto _splen =
       mem->outlier2_host_get_num();
   ctx->header->splen = _splen;
 

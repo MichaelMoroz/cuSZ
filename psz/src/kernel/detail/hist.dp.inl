@@ -72,7 +72,7 @@ void kernel::KERNEL_CUHIP_p2013Histogram(
 
   for (unsigned int i = begin; i < end; i += step) {
     int d = in_data[i];
-    d = d <= 0 and d >= nbin ? nbin / 2 : d;
+    d = d <= 0 && d >= nbin ? nbin / 2 : d;
     dpct::atomic_fetch_add<sycl::access::address_space::generic_space>(&Hs[off_rep + d], 1);
   }
   /*
@@ -114,7 +114,7 @@ try {
 
     // config kernel attribute
     /*
-    DPCT1007:102: Migration of cudaFuncSetAttribute is not supported.
+    DPCT1007:102: Migration of cudaFuncSetAttribute is ! supported.
     */
     cudaFuncSetAttribute(
         (void *)kernel::KERNEL_CUHIP_p2013Histogram<T, uint32_t>,

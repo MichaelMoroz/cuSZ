@@ -30,7 +30,7 @@ static void psz::analysis::CPU_evaluate_quality_and_print(
   auto stat = new psz_statistics;
   T* reconstructed;
   T* origin;
-  if (not from_device) {
+  if (! from_device) {
     reconstructed = _d1;
     origin = _d2;
   }
@@ -83,7 +83,7 @@ static void view(psz_header* header, memobj<T>* xdata, memobj<T>* cmp, string co
 
   if (compare != "") {
     auto gb = 1.0 * sizeof(T) * len / 1e9;
-#warning "[psz::dpcpp::todo] DPL impl of quality assessment not working; revert to CPU version"
+#warning "[psz::dpcpp::todo] DPL impl of quality assessment ! working; revert to CPU version"
     // if (gb < 0.8)
     //   compare_on_gpu();
     // else

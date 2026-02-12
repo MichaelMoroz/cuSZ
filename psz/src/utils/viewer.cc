@@ -81,7 +81,7 @@ void psz_review_comp_time_breakdown(void* _r, psz_header* h)
 
 string const psz_report_query_pred(psz_predictor const p)
 {
-  const std::unordered_map<psz_predictor const, std::string const> lut = {
+  const std::unordered_map<psz_predictor, std::string> lut = {
       {psz_predictor::Lorenzo, "Lorenzo"},
       {psz_predictor::LorenzoZigZag, "Lrz-ZigZag"},
       {psz_predictor::LorenzoProto, "Lrz-Proto"},
@@ -92,7 +92,7 @@ string const psz_report_query_pred(psz_predictor const p)
 
 string const psz_report_query_hist(psz_hist const h)
 {
-  const std::unordered_map<psz_hist const, std::string const> lut = {
+  const std::unordered_map<psz_hist, std::string> lut = {
       {psz_hist::HistogramGeneric, "Hist-generic"},
       {psz_hist::HistogramSparse, "Hist-sparse"},
       {psz_hist::NullHistogram, "Hist-(null)"},
@@ -102,7 +102,7 @@ string const psz_report_query_hist(psz_hist const h)
 
 string const psz_report_query_codec1(psz_codec const c)
 {
-  const std::unordered_map<psz_codec const, std::string const> lut = {
+  const std::unordered_map<psz_codec, std::string> lut = {
       {psz_codec::Huffman, "Huffman"},
       {psz_codec::FZCodec, "FZGPU-Codec"},
   };
@@ -113,7 +113,7 @@ void psz_review_comp_time_from_header(psz_header* h)
 {
   printf("\n");
   // [TODO] put error status
-  if (h->dtype != F4 and h->dtype != F8)
+  if (h->dtype != F4 && h->dtype != F8)
     cout << "[psz::error] original length is is zero." << endl;
 
   auto comp_bytes = [&]() {
@@ -221,7 +221,7 @@ void psz_review_decompression(void* r, size_t bytes)
 template <typename T>
 void psz::analysis::print_metrics_cross(psz_statistics* s, size_t comp_bytes, bool gpu_checker)
 {
-  auto checker = (not gpu_checker) ? string("CPU-checker") : string("GPU-checker");
+  auto checker = (! gpu_checker) ? string("CPU-checker") : string("GPU-checker");
 
   auto bytes = (s->len * sizeof(T) * 1.0);
   auto is_fp = std::is_floating_point_v<T> ? const_cast<char*>("yes") : const_cast<char*>("no");
@@ -233,7 +233,7 @@ void psz::analysis::print_metrics_cross(psz_statistics* s, size_t comp_bytes, bo
                         bool rounding_to_4th = false) {
     std::string combined =
         prefix + (hlcolor_red ? "::\e[1m\e[31m" : "::\e[1m\e[34m") + kw + "\e[0m";
-    if (not rounding_to_4th)
+    if (! rounding_to_4th)
       printf("%-*s%16.8g\n", 36, combined.c_str(), n1);
     else
       printf("%-*s%16.4f\n", 36, combined.c_str(), n1);
@@ -308,7 +308,7 @@ void psz::analysis::CPU_evaluate_quality_and_print(
   auto stat = new psz_statistics;
   T* reconstructed;
   T* origin;
-  if (not from_device) {
+  if (! from_device) {
     reconstructed = _d1;
     origin = _d2;
   }

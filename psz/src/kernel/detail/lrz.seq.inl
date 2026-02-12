@@ -40,8 +40,8 @@
                                                                               \
   /* check data access validity */                                            \
   auto check_boundary1 = [&]() { return gx() < len3.x; };                     \
-  auto check_boundary2 = [&]() { return gx() < len3.x and gy() < len3.y; };   \
-  auto check_boundary3 = [&]() { return check_boundary2() and gz() < len3.z; };
+  auto check_boundary2 = [&]() { return gx() < len3.x && gy() < len3.y; };   \
+  auto check_boundary3 = [&]() { return check_boundary2() && gz() < len3.z; };
 
 #define PARFOR1_GRID() for (b.x = 0; b.x < grid_dim.x; b.x++)
 #define PARFOR1_BLOCK() for (t.x = 0; t.x < BLK; t.x++)
@@ -181,7 +181,7 @@ void KERNEL_SEQ_c_lorenzo_1d1l(
       eqbuf_it(0) = quantizable * (EqUInt)candidate;
     }
 
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = outlier->num()++;
       outlier->val_idx(cur_idx) = {(float)candidate, (u4)gid1()};
     }
@@ -216,7 +216,7 @@ void KERNEL_SEQ_x_lorenzo_1d1l(
   // per-thread ("real" kernel)
   auto threadview_load = [&]() {
     if (check_boundary1()) {
-      if constexpr (not ZigZagEnabled) {
+      if constexpr (! ZigZagEnabled) {
         databuf_it(0) = in_outlier[gid1()] + static_cast<T>(in_eq[gid1()]) - radius;
       }
       else {
@@ -278,7 +278,7 @@ void KERNEL_SEQ_c_lorenzo_2d1l(
       eqbuf_it(0, 0) = quantizable * (EqUInt)candidate;
     }
 
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = outlier->num()++;
       outlier->val_idx(cur_idx) = {(float)candidate, (u4)gid2()};
     }
@@ -313,7 +313,7 @@ void KERNEL_SEQ_x_lorenzo_2d1l(
   // per-thread ("real" kernel)
   auto threadview_load = [&]() {
     if (check_boundary2()) {
-      if constexpr (not ZigZagEnabled) {
+      if constexpr (! ZigZagEnabled) {
         databuf_it(0, 0) = in_outlier[gid2()] + static_cast<T>(in_eq[gid2()]) - radius;
       }
       else {
@@ -380,7 +380,7 @@ void KERNEL_SEQ_c_lorenzo_3d1l(
       eqbuf_it(0, 0, 0) = quantizable * (EqUInt)candidate;
     }
 
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = outlier->num()++;
       outlier->val_idx(cur_idx) = {(float)candidate, (u4)gid3()};
     }
@@ -415,7 +415,7 @@ void KERNEL_SEQ_x_lorenzo_3d1l(
   // per-thread ("real" kernel)
   auto threadview_load = [&]() {
     if (check_boundary3()) {
-      if constexpr (not ZigZagEnabled) {
+      if constexpr (! ZigZagEnabled) {
         databuf_it(0, 0, 0) = in_outlier[gid3()] + static_cast<T>(in_eq[gid3()]) - radius;
       }
       else {

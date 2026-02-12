@@ -44,7 +44,7 @@ struct matchby<8> {
   using itype = typename matchby<bytewidth>::itype;                                      \
   using utype = typename matchby<bytewidth>::utype;                                      \
   using ftype = typename matchby<bytewidth>::ftype;                                      \
-  static_assert(std::is_same<T, ftype>::value, "T and ftype don't match.");              \
+  static_assert(std::is_same<T, ftype>::value, "T && ftype don't match.");              \
   auto fp_as_int = [](T fpval) -> itype { return *reinterpret_cast<itype *>(&fpval); };  \
   auto fp_as_uint = [](T fpval) -> utype { return *reinterpret_cast<utype *>(&fpval); }; \
   auto int_as_fp = [](itype ival) -> T { return *reinterpret_cast<T *>(&ival); };        \

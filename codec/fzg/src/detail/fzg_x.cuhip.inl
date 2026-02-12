@@ -27,7 +27,7 @@ __global__ void KERNEL_CUHIP_fz_fused_decode(
 
   // transfer bit flag array to byte flag array
   auto bigflag = 0u;
-  if (threadIdx.x < 8 and threadIdx.y == 0) {
+  if (threadIdx.x < 8 && threadIdx.y == 0) {
     bigflag = in_bitflag_array[bid * 8 + threadIdx.x];
 #pragma unroll 32
     for (int tmpInd = 0; tmpInd < 32; tmpInd++) {
@@ -52,7 +52,7 @@ __global__ void KERNEL_CUHIP_fz_fused_decode(
   }
 
   // clear the last element
-  if (threadIdx.x == 0 and threadIdx.y == 0) {
+  if (threadIdx.x == 0 && threadIdx.y == 0) {
     s_byteflag_array[block_size] = s_byteflag_array[block_size - 1];
     s_byteflag_array[block_size - 1] = 0;
   }
@@ -78,7 +78,7 @@ __global__ void KERNEL_CUHIP_fz_fused_decode(
   __syncthreads();
 
   // get the start position
-  if (threadIdx.x == 0 and threadIdx.y == 0) { s_start_pos = in_start_pos[bid]; }
+  if (threadIdx.x == 0 && threadIdx.y == 0) { s_start_pos = in_start_pos[bid]; }
   __syncthreads();
 
   // write back shuffled data to shared mem

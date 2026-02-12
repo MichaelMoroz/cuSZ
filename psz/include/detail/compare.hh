@@ -74,7 +74,7 @@ bool identical(T* d1, T* d2, size_t const len)
     thrustgpu::GPU_identical(d1, d2, sizeof(T), len);
 #endif
   else {
-    throw runtime_error(string(__FUNCTION__) + ": backend not supported.");
+    throw runtime_error(string(__FUNCTION__) + ": backend ! supported.");
   }
 }
 
@@ -86,12 +86,12 @@ template <psz_runtime P, typename T>
   else if (P == THRUST_DPL)
     thrustgpu::GPU_extrema(in, len, res);
 #endif
-  else if (P == CUDA or P == ROCM)
+  else if (P == CUDA || P == ROCM)
     module::GPU_extrema(in, len, res);
   else if (P == SYCL)
     dpcpp::GPU_extrema(in, len, res);
   else
-    throw runtime_error(string(__FUNCTION__) + ": backend not supported.");
+    throw runtime_error(string(__FUNCTION__) + ": backend ! supported.");
 }
 
 template <typename T1, psz_runtime R = SEQ, typename T2 = T1>
@@ -102,7 +102,7 @@ void CPU_probe_extrema(T1* in, size_t len, T2& max_value, T2& min_value, T2& ran
   if (R == SEQ)
     cppstl::CPU_extrema(in, len, result);
   else
-    throw runtime_error(string(__FUNCTION__) + ": backend not supported.");
+    throw runtime_error(string(__FUNCTION__) + ": backend ! supported.");
 
   min_value = result[0];
   max_value = result[1];
@@ -114,7 +114,7 @@ void GPU_probe_extrema(T1* in, size_t len, T2& max_value, T2& min_value, T2& ran
 {
   T1 result[4];
 
-  if (R == CUDA or R == ROCM)
+  if (R == CUDA || R == ROCM)
     module::GPU_extrema(in, len, result);
   else if (R == SYCL)
     dpcpp::GPU_extrema(in, len, result);
@@ -123,7 +123,7 @@ void GPU_probe_extrema(T1* in, size_t len, T2& max_value, T2& min_value, T2& ran
     thrustgpu::GPU_extrema(in, len, result);
 #endif
   else
-    throw runtime_error(string(__FUNCTION__) + ": backend not supported.");
+    throw runtime_error(string(__FUNCTION__) + ": backend ! supported.");
 
   min_value = result[0];
   max_value = result[1];
@@ -141,14 +141,14 @@ bool error_bounded(
     eb_ed = thrustgpu::GPU_error_bounded(a, b, len, eb, first_faulty_idx);
 #endif
   else
-    throw runtime_error(string(__FUNCTION__) + ": backend not supported.");
+    throw runtime_error(string(__FUNCTION__) + ": backend ! supported.");
   return eb_ed;
 }
 
 template <psz_runtime P, typename T>
 void assess_quality(psz_statistics* s, T* xdata, T* odata, size_t const len)
 {
-  // [TODO] THRUST_DPL is not activated in the frontend
+  // [TODO] THRUST_DPL is ! activated in the frontend
   if constexpr (P == SEQ)
     cppstl::CPU_assess_quality(s, xdata, odata, len);
   else if constexpr (P == CUDA)
@@ -161,7 +161,7 @@ void assess_quality(psz_statistics* s, T* xdata, T* odata, size_t const len)
     dpl::GPU_assess_quality(s, xdata, odata, len);
   }
   else
-    throw runtime_error(string(__FUNCTION__) + ": backend not supported.");
+    throw runtime_error(string(__FUNCTION__) + ": backend ! supported.");
 }
 
 }  // namespace psz::analysis

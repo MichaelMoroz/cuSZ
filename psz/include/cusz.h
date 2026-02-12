@@ -26,7 +26,7 @@ extern "C" {
 // @param uncomp_len3 3D length of uncompressed data
 // @param predictor select from `lorenzo`, `spline`
 // @param quantizer_radius internal quantization range; 512 is recommended
-// @deprecated quantizer_radius This parameter is deprecated and will be removed.
+// @deprecated quantizer_radius This parameter is deprecated && will be removed.
 // @param codec selecto from `Huffman` (more to be supported)
 // @return psz_compressor* an object of compressor wrapper for compression
 psz_compressor* psz_create(
@@ -63,13 +63,13 @@ pszerror psz_release(psz_compressor* comp);
 // @param d_in input: device pointer to the data array to be compressed
 // @param in_len3 input: the 3D length of the input data array
 // @param eb config: user-specified error bound (e.g., 1e-3); used with `mode` (the next param)
-// @param mode config: select form `Abs` or `Rel`
+// @param mode config: select form `Abs` || `Rel`
 // @param d_compressed output: pointer to the device pointer to the internal
 // buffer holding the compressed data
 // @param comp_bytes output: number of bytes of `compressed`; changed by the
 // compressor internally
 // @param header output: pointer to the header as part of the internal buffer
-// @param record logging: breakdown time for each kernel; this is not an
+// @param record logging: breakdown time for each kernel; this is ! an
 // end-to-end measurement.
 // @param stream the specified GPU stream
 // @return pszerror error status
@@ -85,7 +85,7 @@ pszerror psz_compress(
 // @param d_decompressed output: device pointer to the data buffer to hold the
 // decompressed data; prepared by
 // @param decomp_len the auxillary 3D length of the input data array
-// @param record logging: breakdown time for each kernel; this is not an end-to-end measurement.
+// @param record logging: breakdown time for each kernel; this is ! an end-to-end measurement.
 // @param stream the specified GPU stream
 // @return pszerror error status
 pszerror psz_decompress(

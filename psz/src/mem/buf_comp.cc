@@ -74,6 +74,8 @@ struct psz::Buf_Comp<T, E>::impl {
   {
     // align 4Ki for (essentially) FZG
     d_ectrl = MAKE_UNIQUE_DEVICE(E, ALIGN_4Ki(len_linear));
+    // Decompression also needs Huffman workspace for decode().
+    buf_hf = std::make_unique<Buf_HF>(len_linear, max_bklen);
 
     if (is_comp) {
       d_anchor = MAKE_UNIQUE_DEVICE(T, len_linear_anchor);
@@ -86,7 +88,6 @@ struct psz::Buf_Comp<T, E>::impl {
 
       buf_outlier = std::make_unique<Buf_Outlier>(len_linear * OUTLIER_RATIO);
       buf_outlier2 = std::make_unique<Buf_Outlier2>(len_linear * OUTLIER_RATIO);
-      buf_hf = std::make_unique<Buf_HF>(len_linear, max_bklen);
     }
   }
 

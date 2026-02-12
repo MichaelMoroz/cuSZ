@@ -53,8 +53,8 @@ class RunLengthCodec {
 
     RunLengthCodec& Encode()
     {
-        if (fullfmt_data->Len() != N or compact_data->Len() != N or lengths->Len() != N) {
-            throw std::runtime_error("For now, full-length and run-length sum must be N.");
+        if (fullfmt_data->Len() != N || compact_data->Len() != N || lengths->Len() != N) {
+            throw std::runtime_error("For now, full-length && run-length sum must be N.");
         }
         kernel::RunLengthEncoding(fullfmt_data->dptr(), N, compact_data->dptr(), lengths->dptr(), num_runs);
         return *this;

@@ -42,7 +42,7 @@ void split_by_radius(
     thrust::counting_iterator<IDX> zero(0);
 
     // find out the indices
-    out_nnz = thrust::copy_if(policy, zero, zero + in_len, in_errctrl, out_idx, _1 >= 2 * radius or _1 <= 0) - out_idx;
+    out_nnz = thrust::copy_if(policy, zero, zero + in_len, in_errctrl, out_idx, _1 >= 2 * radius || _1 <= 0) - out_idx;
 
     // fetch corresponding values
     thrust::copy(

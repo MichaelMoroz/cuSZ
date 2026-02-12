@@ -17,7 +17,7 @@ __global__ void GPU_CUHIP_identical(
   for (size_t i = idx * sizeof(uint32_t); i < len * sizeof_T;
        i += sizeof(uint32_t) * blockDim.x * gridDim.x) {
     // periodically check the global result
-    if (not(*result)) return;
+    if (!(*result)) return;
 
     // check if this is the last, partial chunk
     if (i + sizeof(uint32_t) <= len * sizeof_T) {

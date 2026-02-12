@@ -42,10 +42,10 @@ using _portable::utils::tofile;
   }
 
 #define WRITE_TO_DISK(T)                                                                 \
-  if (not args->cli->skip_tofile) {                                                      \
+  if (! args->cli->skip_tofile) {                                                      \
     auto h_decomped = MAKE_UNIQUE_HOST(T, len);                                          \
     memcpy_allkinds<D2H>(h_decomped.get(), d_decomped.get(), len);                       \
-    tofile(std::string(basename + ".cuszx").c_str(), h_decomped.get(), sizeof(T) * len); \
+    tofile(std::string(basename + ".cuszx").c_str(), h_decomped.get(), len);             \
   }
 
 int psz_run_from_CLI(int argc, char** argv)
@@ -109,7 +109,7 @@ int psz_run_from_CLI(int argc, char** argv)
       psz_review_comp_time_from_header(&header);
     }
 
-    if (not args->cli->skip_tofile) {
+    if (! args->cli->skip_tofile) {
       auto compressed_name = std::string(args->cli->file_input) + ".cusza";
       auto file = MAKE_UNIQUE_HOST(uint8_t, compressed_len);
       memcpy_allkinds<D2H>(file.get(), d_internal_compressed, compressed_len);
@@ -131,7 +131,6 @@ int psz_run_from_CLI(int argc, char** argv)
     };
 
     auto compressed_len = filesize(args->cli->file_input);
-
     auto d_comped = MAKE_UNIQUE_DEVICE(uint8_t, compressed_len);
     auto h_comped = MAKE_UNIQUE_HOST(uint8_t, compressed_len);
     fromfile(args->cli->file_input, h_comped.get(), compressed_len);
@@ -142,24 +141,28 @@ int psz_run_from_CLI(int argc, char** argv)
     auto len = pszheader_uncompressed_len(header);
     psz::TimeRecord timerecord;
 
-    psz_resource* m = psz_create_resource_manager_from_header(header, stream);
+    auto comp = psz_create_from_header(header);
 
-    if (CLI_dtype(m) == F4) {
+    if (header->dtype == F4) {
       auto d_decomped = MAKE_UNIQUE_DEVICE(float, len);
-      psz_decompress_float(m, d_comped.get(), comp_len, d_decomped.get());
+      psz_decompress(
+          comp, d_comped.get(), comp_len, d_decomped.get(),
+          {header->len.x, header->len.y, header->len.z}, &timerecord, stream);
       REPORT(float);
       COMPARE_WITH_ORIGIN(float);
       WRITE_TO_DISK(float);
     }
-    else if (CLI_dtype(m) == F8) {
+    else if (header->dtype == F8) {
       auto d_decomped = MAKE_UNIQUE_DEVICE(double, len);
-      psz_decompress_double(m, d_comped.get(), comp_len, d_decomped.get());
+      psz_decompress(
+          comp, d_comped.get(), comp_len, d_decomped.get(),
+          {header->len.x, header->len.y, header->len.z}, &timerecord, stream);
       REPORT(double);
       COMPARE_WITH_ORIGIN(double);
       WRITE_TO_DISK(double);
     }
 
-    if (m) psz_release_resource(m);
+    if (comp) psz_release(comp);
   }
   else {
     cerr << "No task specified." << endl;

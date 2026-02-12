@@ -42,7 +42,7 @@ void GPU_find_max_error(
   maximum_val = *maximum_ptr;
   maximum_loc = maximum_ptr - d;
 
-  if (not destructive) { sycl::free(diff, q_ct1); }
+  if (! destructive) { sycl::free(diff, q_ct1); }
 }
 
 }  // namespace psz::dpl

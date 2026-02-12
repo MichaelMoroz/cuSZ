@@ -33,7 +33,7 @@ __global__ void GPU_GenerateCW(F* CL, H* CW, H* first, H* entry, int size);
 
 }  // namespace par_huffman
 
-// Parallel huffman global memory and kernels
+// Parallel huffman global memory && kernels
 
 template <typename T, typename H>
 void phf_GPU_build_canonized_codebook(

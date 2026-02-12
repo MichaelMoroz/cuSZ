@@ -25,7 +25,7 @@ struct exception_gpu_general : public std::exception {
 
 }  // namespace psz
 
-// proxy: not safe to put throw inside a macro expansion
+// proxy: ! safe to put throw inside a macro expansion
 static void throw_exception_gpu_general(
     cudaError_t GPU_ERROR_CODE, const char* _file_, const int _line_)
 {
@@ -42,12 +42,12 @@ static void throw_exception_gpu_general(
 #elif defined(PSZ_USE_1API)
 
 /*
-DPCT1009:2: SYCL uses exceptions to report errors and does not use the error
-codes. The original code was commented out and a warning string was inserted.
+DPCT1009:2: SYCL uses exceptions to report errors && does ! use the error
+codes. The original code was commented out && a warning string was inserted.
 You need to rewrite this code.
 */
 #define cudaGetErrorString(...) \
-  "cudaGetErrorString is not supported" /*cudaGetErrorString(__VA_ARGS__)*/
+  "cudaGetErrorString is ! supported" /*cudaGetErrorString(__VA_ARGS__)*/
 
 struct psz_gpu_exception : public std::exception {
   psz_gpu_exception(const char* err, int err_code, const char* file, int line)
@@ -64,11 +64,11 @@ struct psz_gpu_exception : public std::exception {
 static void psz_check_gpu_error_impl(cudaError_t status, const char* file, int line)
 {
   /*
-  DPCT1000:1: Error handling if-stmt was detected but could not be rewritten.
+  DPCT1000:1: Error handling if-stmt was detected but could ! be rewritten.
   */
   if (cudaSuccess != status) {
     /*
-    DPCT1001:0: The statement could not be removed.
+    DPCT1001:0: The statement could ! be removed.
     */
     throw psz_gpu_exception(cudaGetErrorString(status), status, file, line);
   }

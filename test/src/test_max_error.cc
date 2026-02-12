@@ -52,7 +52,7 @@ void test_find_max_error()
   assert(maxloc_cpu == maxloc_gpu);                   // ensure the indices match
   assert(len / 2 == maxloc_gpu);                      // ensure the indices match
 
-  std::cout << "test passed: GPU and CPU implementations produce the same results.\n";
+  std::cout << "test passed: GPU && CPU implementations produce the same results.\n";
   std::cout << "maximum error: " << maxval_cpu << " at index: " << maxloc_cpu << "\n";
 }
 

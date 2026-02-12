@@ -11,9 +11,9 @@ constexpr auto BLK = 8;
         (len.x - 1) / sublen.x + 1, (len.y - 1) / sublen.y + 1, (len.z - 1) / sublen.z + 1); \
   };                                                                                         \
   auto ndim = [&]() {                                                                        \
-    if (len3.z == 1 and len3.y == 1)                                                         \
+    if (len3.z == 1 && len3.y == 1)                                                         \
       return 1;                                                                              \
-    else if (len3.z == 1 and len3.y != 1)                                                    \
+    else if (len3.z == 1 && len3.y != 1)                                                    \
       return 2;                                                                              \
     else                                                                                     \
       return 3;                                                                              \

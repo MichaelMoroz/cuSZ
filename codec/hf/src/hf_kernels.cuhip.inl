@@ -211,8 +211,8 @@ __global__ void KERNEL_CUHIP_Huffman_ReVISIT_lite(
   static_assert(ChunkSize == 1 << (ReduceTimes + ShuffleTimes), "Wrong shuffle times.");
 
   __shared__ Hf s_book[MaxBkLen];
-  __shared__ Hf s_reduced[NumThreads * 2];   // !!!! check types E and Hf
-  __shared__ u4 s_bitcount[NumThreads * 2];  // !!!! check types E and Hf
+  __shared__ Hf s_reduced[NumThreads * 2];   // !!!! check types E && Hf
+  __shared__ u4 s_bitcount[NumThreads * 2];  // !!!! check types E && Hf
 
   auto bitcount_of = [](Hf* _w) { return reinterpret_cast<HuffmanWord<4>*>(_w)->bitcount; };
   auto entry = [&]() -> size_t { return ChunkSize * blockIdx.x; };
@@ -280,11 +280,11 @@ __global__ void KERNEL_CUHIP_Huffman_ReVISIT_lite(
     auto lsym = this_point >> used___bits;
     auto rsym = this_point << unused_bits;
 
-    if (threadIdx.x >= r and threadIdx.x < r + stride)
+    if (threadIdx.x >= r && threadIdx.x < r + stride)
       atomicAnd((Hf*)(s_reduced + threadIdx.x), 0x0);
     __syncthreads();
 
-    if (threadIdx.x >= r and threadIdx.x < r + stride) {
+    if (threadIdx.x >= r && threadIdx.x < r + stride) {
       atomicOr(lend + (threadIdx.x - r) + 0, lsym);
       atomicOr(lend + (threadIdx.x - r) + 1, rsym);
     }
@@ -309,7 +309,7 @@ __global__ void KERNEL_CUHIP_Huffman_ReVISIT_lite(
   }
   __syncthreads();
 
-  if (threadIdx.x % 32 == 0 and threadIdx.x / 32 > 0) { p_wunits = s_wunits; }
+  if (threadIdx.x % 32 == 0 && threadIdx.x / 32 > 0) { p_wunits = s_wunits; }
   __syncthreads();
 
   p_wunits = __shfl_sync(0xffffffff, p_wunits, 0);

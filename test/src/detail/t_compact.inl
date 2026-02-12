@@ -86,6 +86,6 @@ bool f()
 
   cudaFree(in);
 
-  return (out_ref.num() == out_test1.host_get_num()) and
+  return (out_ref.num() == out_test1.host_get_num()) &&
          (out_ref.num() == out_test2.host_get_num());
 }

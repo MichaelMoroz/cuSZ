@@ -33,11 +33,11 @@ void psz::sanitize<T, E, H>::sanitize_pszctx(psz_ctx const* const ctx, std::stri
 template <typename T, typename E, typename H>
 void psz::sanitize<T, E, H>::sanitize_quantcode(E const* h_ectrl, szt len, szt bklen)
 {
-  if (not(std::is_same<E, u1>::value or std::is_same<E, u2>::value or std::is_same<E, u4>::value))
-    __PSZDBG__FATAL("E is not valid dtype for histogram input.");
+  if (!(std::is_same<E, u1>::value || std::is_same<E, u2>::value || std::is_same<E, u4>::value))
+    __PSZDBG__FATAL("E is ! valid dtype for histogram input.");
 
   auto found_ptr =
-      std::find_if(h_ectrl, h_ectrl + len, [&](auto v) { return v >= bklen or v < 0; });
+      std::find_if(h_ectrl, h_ectrl + len, [&](auto v) { return v >= bklen || v < 0; });
   if (found_ptr != h_ectrl + len) {
     auto idx = found_ptr - h_ectrl;
 
@@ -75,8 +75,8 @@ void psz::sanitize<T, E, H>::sanitize_hist_book(M const* h_hist, H const* h_bk, 
 template <typename T, typename E, typename H>
 void psz::sanitize<T, E, H>::sanitize_hist_out(M const* const h_hist, szt bklen)
 {
-  if (not(std::is_same<M, u1>::value or std::is_same<M, u2>::value or std::is_same<M, u4>::value))
-    __PSZDBG__FATAL("M is not valid dtype for histogram output.");
+  if (!(std::is_same<M, u1>::value || std::is_same<M, u2>::value || std::is_same<M, u4>::value))
+    __PSZDBG__FATAL("M is ! valid dtype for histogram output.");
 
   // TODO warning
   auto all_zero = std::all_of(h_hist, h_hist + bklen, [](auto i) { return i == 0; });

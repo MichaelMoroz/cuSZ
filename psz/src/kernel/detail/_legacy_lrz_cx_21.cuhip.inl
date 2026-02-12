@@ -23,7 +23,7 @@
 // #pragma message __FILE__ ": (CUDA 11 onward), cub from system path"
 #include <cub/cub.cuh>
 #else
-// #pragma message __FILE__ ": (CUDA 10 or earlier), cub from git submodule"
+// #pragma message __FILE__ ": (CUDA 10 || earlier), cub from git submodule"
 #include "../../third_party/cub/cub/cub.cuh"
 #endif
 
@@ -205,7 +205,7 @@ namespace {
 
 /**
  * @brief (Original SZ/cuSZ design) 1D: separate delta by radius in to
- * quant-code and outlier
+ * quant-code && outlier
  */
 template <typename Data, typename ErrCtrl, int SEQ, bool FIRST_POINT>
 __forceinline__ __device__ void pred1d_radius_separate(
@@ -288,7 +288,7 @@ __forceinline__ __device__ void load2d_prequant(
 
 #pragma unroll
   for (auto i = 0; i < YSEQ; i++) {
-    if (gix < dimx and giy_base + i < dimy)
+    if (gix < dimx && giy_base + i < dimy)
       center[i + 1] = round(data[get_gid(i)] * ebx2_r);
   }
   auto tmp =
@@ -324,7 +324,7 @@ __forceinline__ __device__ void postquant_write2d(
   for (auto i = 1; i < YSEQ + 1; i++) {
     auto gid = get_gid(i - 1);
 
-    if (gix < dimx and giy_base + i - 1 < dimy) {
+    if (gix < dimx && giy_base + i - 1 < dimy) {
       bool quantizable = fabs(center[i]) < radius;
       Data candidate = center[i] + radius;
       outlier[gid] =
@@ -415,7 +415,7 @@ __global__ void cusz::c_lorenzo_3d1l_32x8x8data_mapto32x1x8(
   /********************************************************************************
    * load from DRAM, perform prequant
    ********************************************************************************/
-  if (gix < len3.x and giz < len3.z) {
+  if (gix < len3.x && giz < len3.z) {
     for (auto y = 0; y < BLOCK; y++) {
       if (giy_base + y < len3.y) {
         shmem[z][y][TIX] = round(
@@ -434,11 +434,11 @@ __global__ void cusz::c_lorenzo_3d1l_32x8x8data_mapto32x1x8(
      * prediction
      ********************************************************************************/
     delta = shmem[z][y][TIX] -
-            ((z > 0 and y > 0 and x > 0 ? shmem[z - 1][y - 1][TIX - 1]
+            ((z > 0 && y > 0 && x > 0 ? shmem[z - 1][y - 1][TIX - 1]
                                         : 0)                     // dist=3
-             - (y > 0 and x > 0 ? shmem[z][y - 1][TIX - 1] : 0)  // dist=2
-             - (z > 0 and x > 0 ? shmem[z - 1][y][TIX - 1] : 0)  //
-             - (z > 0 and y > 0 ? shmem[z - 1][y - 1][TIX] : 0)  //
+             - (y > 0 && x > 0 ? shmem[z][y - 1][TIX - 1] : 0)  // dist=2
+             - (z > 0 && x > 0 ? shmem[z - 1][y][TIX - 1] : 0)  //
+             - (z > 0 && y > 0 ? shmem[z - 1][y - 1][TIX] : 0)  //
              + (x > 0 ? shmem[z][y][TIX - 1] : 0)                // dist=1
              + (y > 0 ? shmem[z][y - 1][TIX] : 0)                //
              + (z > 0 ? shmem[z - 1][y][TIX] : 0));              //
@@ -447,7 +447,7 @@ __global__ void cusz::c_lorenzo_3d1l_32x8x8data_mapto32x1x8(
 
     bool quantizable = fabs(delta) < radius;
     Data candidate = delta + radius;
-    if (gix < len3.x and (giy_base + y) < len3.y and giz < len3.z) {
+    if (gix < len3.x && (giy_base + y) < len3.y && giz < len3.z) {
       outlier[id] =
           (1 - quantizable) * candidate;  // output; reuse data for outlier
       quant[id] = quantizable * static_cast<ErrCtrl>(candidate);
@@ -463,7 +463,7 @@ __global__ void cusz::x_lorenzo_1d1l(  //
 {
   constexpr auto block_dim = BLOCK / SEQ;  // dividable
 
-  // coalesce-load (warp-striped) and transpose in shmem (similar for store)
+  // coalesce-load (warp-striped) && transpose in shmem (similar for store)
   typedef cub::BlockLoad<Data, block_dim, SEQ, cub::BLOCK_LOAD_WARP_TRANSPOSE>
       BlockLoadT_outlier;
   typedef cub::BlockLoad<
@@ -519,7 +519,7 @@ __global__ void cusz::x_lorenzo_1d1l(  //
   __syncthreads();  // barrier for shmem reuse
 
   /********************************************************************************
-   * scale by ebx2 and write to DRAM
+   * scale by ebx2 && write to DRAM
    ********************************************************************************/
 #pragma unroll
   for (auto i = 0; i < SEQ; i++) thread_scope.xdata[i] *= ebx2;
@@ -568,7 +568,7 @@ __global__ void cusz::x_lorenzo_2d1l_16x16data_mapto16x2(
     auto gid = get_gid(i);
     // even if we hit the else branch, all threads in a warp hit the y-boundary
     // simultaneously
-    if (gix < len3.x and giy_base + i < len3.y)
+    if (gix < len3.x && giy_base + i < len3.y)
       thread_scope[i] =
           outlier[gid] + static_cast<Data>(quant[gid]) - radius;  // fuse
     else
@@ -582,7 +582,7 @@ __global__ void cusz::x_lorenzo_2d1l_16x16data_mapto16x2(
   // two-pass: store for cross-threadscope update
   if (TIY == 0) intermediate[TIX] = thread_scope[YSEQ - 1];
   __syncthreads();
-  // two-pass: load and update
+  // two-pass: load && update
   if (TIY == 1) {
     auto tmp = intermediate[TIX];
 #pragma unroll
@@ -607,7 +607,7 @@ __global__ void cusz::x_lorenzo_2d1l_16x16data_mapto16x2(
 #pragma unroll
   for (auto i = 0; i < YSEQ; i++) {
     auto gid = get_gid(i);
-    if (gix < len3.x and giy_base + i < len3.y) xdata[gid] = thread_scope[i];
+    if (gix < len3.x && giy_base + i < len3.y) xdata[gid] = thread_scope[i];
   }
 }
 
@@ -638,7 +638,7 @@ __global__ void cusz::x_lorenzo_3d1l_32x8x8data_mapto32x1x8(
 #pragma unroll
   for (auto y = 0; y < YSEQ; y++) {
     auto gid = get_gid(y);
-    if (gix < len3.x and giy_base + y < len3.y and giz < len3.z)
+    if (gix < len3.x && giy_base + y < len3.y && giz < len3.z)
       thread_scope[y] = outlier[gid] + static_cast<Data>(quant[gid]) -
                         static_cast<Data>(radius);  // fuse
     else
@@ -651,7 +651,7 @@ __global__ void cusz::x_lorenzo_3d1l_32x8x8data_mapto32x1x8(
   for (auto y = 1; y < YSEQ; y++) thread_scope[y] += thread_scope[y - 1];
 
   /********************************************************************************
-   * ND partial-sums along x- and z-axis
+   * ND partial-sums along x- && z-axis
    * in-warp shuffle used: in order to perform, it's transposed after X-partial
    *sum
    ********************************************************************************/
@@ -691,7 +691,7 @@ __global__ void cusz::x_lorenzo_3d1l_32x8x8data_mapto32x1x8(
    ********************************************************************************/
 #pragma unroll
   for (auto y = 0; y < YSEQ; y++) {
-    if (gix < len3.x and giy_base + y < len3.y and giz < len3.z) {
+    if (gix < len3.x && giy_base + y < len3.y && giz < len3.z) {
       xdata[get_gid(y)] = thread_scope[y] * ebx2;
     }
   }
@@ -729,7 +729,7 @@ __global__ void cusz::x_lorenzo_3d1lvar_32x8x8data_mapto32x1x8(
 #pragma unroll
   for (y = 0; y < YSEQ; y++) {
     auto gid = get_gid(y);
-    if (gix < len3.x and giy_base + y < len3.y and giz < len3.z)
+    if (gix < len3.x && giy_base + y < len3.y && giz < len3.z)
       thread_scope += outlier[gid] + static_cast<Data>(quant[gid]) -
                       static_cast<Data>(radius);  // fuse
 
@@ -759,7 +759,7 @@ __global__ void cusz::x_lorenzo_3d1lvar_32x8x8data_mapto32x1x8(
 
     // thread_scope += val;
 
-    if (gix < len3.x and giy_base + y < len3.y and giz < len3.z) {
+    if (gix < len3.x && giy_base + y < len3.y && giz < len3.z) {
       xdata[get_gid(y)] = val * ebx2;
     }
   }

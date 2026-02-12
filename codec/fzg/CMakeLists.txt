@@ -31,7 +31,7 @@ endif()
 # Library
 # ------------------------------------------------------------------------------
 
-add_library(fzg_cu
+add_library(fzg_cu STATIC
   src/fzg_hl.cc
   src/fzg_kernel.cu
   src/fzg_buf.cc

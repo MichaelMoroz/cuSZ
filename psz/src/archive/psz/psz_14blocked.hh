@@ -77,7 +77,7 @@ void c_lorenzo_2d1l(
             size_t gi1 = _idx1 + i1;
             size_t gi0 = _idx0 + i0;
 
-            if (gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+            if (gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
             size_t id           = gi0 + gi1 * dims[DIM0];
             __s[i1 + 1][i0 + 1] = d[id];
 
@@ -127,7 +127,7 @@ void c_lorenzo_3d1l(
                 size_t gi1 = _idx1 + i1;
                 size_t gi0 = _idx0 + i0;
 
-                if (gi2 >= dims[DIM2] or gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+                if (gi2 >= dims[DIM2] || gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
                 size_t id                   = gi0 + gi1 * dims[DIM0] + gi2 * dims[DIM1] * dims[DIM0];
                 __s[i2 + 1][i1 + 1][i0 + 1] = d[id];
 
@@ -193,7 +193,7 @@ void x_lorenzo_2d1l(
         for (size_t i0 = 0; i0 < B; i0++) {
             size_t gi1 = _idx1 + i1;
             size_t gi0 = _idx0 + i0;
-            if (gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+            if (gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
             const size_t id   = gi0 + gi1 * dims[DIM0];
             Data         pred = __s[i1][i0 + 1] + __s[i1 + 1][i0] - __s[i1][i0];
             __s[i1 + 1][i0 + 1] =
@@ -228,7 +228,7 @@ void x_lorenzo_3d1l(
                 size_t gi2 = _idx2 + i2;
                 size_t gi1 = _idx1 + i1;
                 size_t gi0 = _idx0 + i0;
-                if (gi2 >= dims[DIM2] or gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+                if (gi2 >= dims[DIM2] || gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
                 size_t id   = gi0 + gi1 * dims[DIM0] + gi2 * dims[DIM1] * dims[DIM0];
                 Data   pred = __s[i2][i1][i0]                                                              //
                             - __s[i2 + 1][i1][i0 + 1] - __s[i2 + 1][i1 + 1][i0] - __s[i2][i1 + 1][i0 + 1]  //

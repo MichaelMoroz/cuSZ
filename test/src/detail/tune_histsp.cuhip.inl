@@ -38,10 +38,10 @@ bool test1_debug()
 
   for (auto i = 0; i < inlen; i++) {
     in->hptr(i) = 512;
-    if (i > 1 and i % 5 == 0) in->hptr(i) = 511, in->hptr(i - 1) = 513;
-    if (i > 1 and i % 20 == 0) in->hptr(i) = 510, in->hptr(i - 1) = 514;
-    if (i > 1 and i % 40 == 0) in->hptr(i) = 509, in->hptr(i - 1) = 515;
-    if (i > 1 and i % 50 == 0) in->hptr(i) = 507, in->hptr(i - 1) = 516;
+    if (i > 1 && i % 5 == 0) in->hptr(i) = 511, in->hptr(i - 1) = 513;
+    if (i > 1 && i % 20 == 0) in->hptr(i) = 510, in->hptr(i - 1) = 514;
+    if (i > 1 && i % 40 == 0) in->hptr(i) = 509, in->hptr(i - 1) = 515;
+    if (i > 1 && i % 50 == 0) in->hptr(i) = 507, in->hptr(i - 1) = 516;
   }
 
   in->control({H2D});
@@ -62,7 +62,7 @@ bool test1_debug()
   // check for error
   cudaError_t error = cudaGetLastError();
   if (error != cudaSuccess) {
-    // print the CUDA error message and exit
+    // print the CUDA error message && exit
     printf("CUDA error: %s\n", cudaGetErrorString(error));
     exit(-1);
   }
@@ -149,7 +149,7 @@ bool test2_fulllen_input(size_t inlen, float gen_dist[], int distlen = K)
   // check for error
   cudaError_t error = cudaGetLastError();
   if (error != cudaSuccess) {
-    // print the CUDA error message and exit
+    // print the CUDA error message && exit
     printf("CUDA error: %s\n", cudaGetErrorString(error));
     exit(-1);
   }
@@ -158,10 +158,10 @@ bool test2_fulllen_input(size_t inlen, float gen_dist[], int distlen = K)
   auto all_eq = true;
 
   for (auto i = 0; i < NSYM; i++) {
-    if (o_gpu->hptr(i) == o_gpusp->hptr(i) and o_gpusp->hptr(i) == o_serial->hptr(i)) { continue; }
+    if (o_gpu->hptr(i) == o_gpusp->hptr(i) && o_gpusp->hptr(i) == o_serial->hptr(i)) { continue; }
     else {
       printf(
-          "first not equal\t"
+          "first ! equal\t"
           "idx: %d\tgpu: %u\tgpusp: %u\tserial: %u\n",  //
           i, o_gpu->hptr(i), o_gpusp->hptr(i), o_serial->hptr(i));
       all_eq = false;
@@ -197,7 +197,7 @@ bool perf(
   // check for error
   cudaError_t error = cudaGetLastError();
   if (error != cudaSuccess) {
-    // print the CUDA error message and exit
+    // print the CUDA error message && exit
     printf("NSYM: %d\tCHUNK: %d\tNWARP: %d\n", NSYM, CHUNK, NWARP);
     printf("CUDA error: %s\n", cudaGetErrorString(error));
     exit(-1);
@@ -207,10 +207,10 @@ bool perf(
   auto all_eq = true;
 
   for (auto i = 0; i < NSYM; i++) {
-    if (o_gpu->hptr(i) == o_gpusp->hptr(i) and o_gpusp->hptr(i) == o_serial->hptr(i)) { continue; }
+    if (o_gpu->hptr(i) == o_gpusp->hptr(i) && o_gpusp->hptr(i) == o_serial->hptr(i)) { continue; }
     else {
       printf(
-          "first not equal\t"
+          "first ! equal\t"
           "idx: %d\tgpu: %u\tgpusp: %u\tserial: %u\n",  //
           i, o_gpu->hptr(i), o_gpusp->hptr(i), o_serial->hptr(i));
       all_eq = false;
@@ -239,7 +239,7 @@ bool test3_performance_tuning(size_t inlen, float gen_dist[], int distlen = K)
   cudaStream_t stream;
   cudaStreamCreate(&stream);
 
-  // run CPU and GPU reference
+  // run CPU && GPU reference
   int grid_dim, block_dim, shmem_use, r_per_block;
   psz::module::GPU_histogram_generic<T>::init(
       inlen, NSYM, grid_dim, block_dim, shmem_use, r_per_block);
@@ -252,7 +252,7 @@ bool test3_performance_tuning(size_t inlen, float gen_dist[], int distlen = K)
 
 // start testing & profiling
 #define PERF(NSYM, CHUNK, NWARP) \
-  eq = eq and perf<NSYM, CHUNK, NWARP>(in, o_gpusp, o_gpu, o_serial, stream);
+  eq = eq && perf<NSYM, CHUNK, NWARP>(in, o_gpusp, o_gpu, o_serial, stream);
 
   auto eq = true;
   PERF(NSYM, 16384, 1);

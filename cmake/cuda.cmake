@@ -8,6 +8,7 @@ add_compile_definitions(
 )
 
 find_package(CUDAToolkit REQUIRED)
+set(CMAKE_CUDA_RUNTIME_LIBRARY Shared)
 
 include(GNUInstallDirs)
 include(CTest)
@@ -26,8 +27,8 @@ add_library(psz_cu_compile_settings INTERFACE)
 
 target_compile_features(psz_cu_compile_settings
   INTERFACE
-    cxx_std_17
-    cuda_std_17
+    cxx_std_20
+    cuda_std_20
 )
 
 target_compile_definitions(psz_cu_compile_settings
@@ -94,7 +95,7 @@ endif()
 # Libraries
 # ------------------------------------------------------------------------------
 
-add_library(psz_cu_stat
+add_library(psz_cu_stat STATIC
   psz/src/stat/compare.stl.cc
   psz/src/stat/identical/all.cu
   psz/src/stat/extrema/f4.cu
@@ -122,7 +123,7 @@ target_link_libraries(psz_seq_core
     psz_cu_compile_settings
 )
 
-add_library(psz_cu_mem
+add_library(psz_cu_mem STATIC
   psz/src/mem/buf_comp.cc
 )
 target_link_libraries(psz_cu_mem
@@ -134,7 +135,7 @@ target_link_libraries(psz_cu_mem
     CUDA::cudart
 )
 
-add_library(psz_cu_core
+add_library(psz_cu_core STATIC
   psz/src/kernel/hist_generic.cu
   psz/src/kernel/histsp.cu
   psz/src/kernel/proto_lrz_c.cu
@@ -152,7 +153,7 @@ target_link_libraries(psz_cu_core
     CUDA::cudart
 )
 
-add_library(psz_cu_utils
+add_library(psz_cu_utils STATIC
   psz/src/utils/viewer.cc
   psz/src/utils/viewer.cu
   psz/src/utils/verinfo.cc
@@ -165,13 +166,14 @@ add_library(psz_cu_utils
 target_link_libraries(psz_cu_utils
   PUBLIC
     psz_cu_compile_settings
+    psz_cu_stat
     PHF::phf_cu
     CUDA::cudart
     CUDA::nvml
     CUDA::cuda_driver
 )
 
-add_library(cusz
+add_library(cusz STATIC
   psz/src/compressor.cc
   psz/src/libcusz.cc
 )

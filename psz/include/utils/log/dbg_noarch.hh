@@ -13,7 +13,7 @@
 #define B5D125C9_82B7_4611_B1F2_2A2CE5930AF5
 
 /**
- * @brief Below only functionality is added defined, not involving in verbosity
+ * @brief Below only functionality is added defined, ! involving in verbosity
  * control.
  *
  */

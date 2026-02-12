@@ -19,9 +19,9 @@ pszerror GPU_c_lorenzo_nd_with_outlier(
     void* _outlier, f4* time_elapsed, void* stream)
 {
   static_assert(
-      std::is_same<Eq, u4>::value or std::is_same<Eq, uint16_t>::value or
+      std::is_same<Eq, u4>::value || std::is_same<Eq, uint16_t>::value ||
           std::is_same<Eq, uint8_t>::value,
-      "Eq must be unsigned integer that is less than or equal to 4 bytes.");
+      "Eq must be unsigned integer that is less than || equal to 4 bytes.");
 
   auto sycl_div3 = [](sycl::range<3> len, sycl::range<3> tile) {
     return sycl::range<3>(
@@ -29,9 +29,9 @@ pszerror GPU_c_lorenzo_nd_with_outlier(
   };
 
   auto ndim = [&]() {
-    if (len3[0] == 1 and len3[1] == 1)
+    if (len3[0] == 1 && len3[1] == 1)
       return 1;
-    else if (len3[0] == 1 and len3[1] != 1)
+    else if (len3[0] == 1 && len3[1] != 1)
       return 2;
     else
       return 3;

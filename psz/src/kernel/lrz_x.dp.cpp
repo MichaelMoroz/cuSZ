@@ -22,9 +22,9 @@ pszerror GPU_x_lorenzo_nd(
   };
 
   auto ndim = [&]() {
-    if (len3[0] == 1 and len3[1] == 1)
+    if (len3[0] == 1 && len3[1] == 1)
       return 1;
-    else if (len3[0] == 1 and len3[1] != 1)
+    else if (len3[0] == 1 && len3[1] != 1)
       return 2;
     else
       return 3;

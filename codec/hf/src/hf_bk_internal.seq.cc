@@ -11,6 +11,7 @@
 
 #include <queue>
 #include <stdexcept>
+#include <string>
 
 #include "hf_impl.hh"
 
@@ -73,8 +74,8 @@ void NODE_STACK::inorder_traverse(NodeType* root, H* book)
   bool done = 0;
   H out1 = 0, len = 0;
 
-  while (not done and p != nullptr) {
-    if (p->left or p->right) {
+  while (! done && p != nullptr) {
+    if (p->left || p->right) {
       push(s, p, out1, len);
       p = p->left;
       out1 <<= 1u;
@@ -88,7 +89,7 @@ void NODE_STACK::inorder_traverse(NodeType* root, H* book)
       book[symbol] = out1;
       reinterpret_cast<PW*>(&book[symbol])->bitcount = len;
 
-      if (not is_empty(s)) {
+      if (! is_empty(s)) {
         p = pop(s, &out1, &len);
         p = p->right;
         out1 <<= 1u;

@@ -42,7 +42,7 @@ __device__ __host__ void print_by_type(T num, char sep = '_', char ending = '\n'
 {
     for (size_t j = 0; j < sizeof(T) * CHAR_BIT; j++) {
         printf("%u", (num >> ((sizeof(T) * CHAR_BIT - 1) - j)) & 0x01u);
-        if (j != 0 and j != sizeof(T) * CHAR_BIT - 1 and j % 8 == 7) printf("%c", sep);
+        if (j != 0 && j != sizeof(T) * CHAR_BIT - 1 && j % 8 == 7) printf("%c", sep);
     }
     printf("%c", ending);
 }
@@ -53,7 +53,7 @@ __device__ __host__ void print_code_only(T num, size_t bitwidth, char sep = '_',
 {
     for (size_t j = 0; j < bitwidth; j++) {
         printf("%u", (num >> ((bitwidth - 1) - j)) & 0x01u);
-        if (j != 0 and j != bitwidth - 1 and j % 8 == 7) printf("%c", sep);
+        if (j != 0 && j != bitwidth - 1 && j % 8 == 7) printf("%c", sep);
     }
     printf("%c", ending);
 }

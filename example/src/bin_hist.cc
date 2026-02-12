@@ -78,7 +78,7 @@ void real_data_test(size_t len, size_t bklen, string fname)
   // check for error
   cudaError_t error = cudaGetLastError();
   if (error != cudaSuccess) {
-    // print the CUDA error message and exit
+    // print the CUDA error message && exit
     printf("GPU error: %s\n", cudaGetErrorString(error));
     exit(-1);
   }
@@ -90,7 +90,7 @@ void real_data_test(size_t len, size_t bklen, string fname)
     for (auto i = 0; i < bklen; i++) {
       auto fbs = bs_h[i], fbg = bg_h[i];
       auto fos = os_h[i], fog = og_h[i];
-      if (fbs != 0 or fos != 0 or fbg != 0 or fog != 0)
+      if (fbs != 0 || fos != 0 || fbg != 0 || fog != 0)
         printf(
             "%-4u(%4d) %10u %10u %10u %10u\n",  //
             i, i - (int)bklen / 2, fbs, fbg, fos, fog);
@@ -139,7 +139,7 @@ void dummy_data_test()
     printf("%-10s %10s %10s\n", "idx ( rel)", "sp-ser", "sp-gpu");
     for (auto i = 0; i < bklen; i++) {
       auto f1 = serial_h[i], f2 = gpu_h[i];
-      if (f1 != 0 or f2 != 0) printf("%-4u(%4d) %10u %10u\n", i, i - bklen / 2, f1, f2);
+      if (f1 != 0 || f2 != 0) printf("%-4u(%4d) %10u %10u\n", i, i - bklen / 2, f1, f2);
     }
   }
 

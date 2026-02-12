@@ -9,8 +9,8 @@ constexpr size_t len = 1024;
 constexpr float scalar = 5.0f;
 constexpr size_t bytes = len * sizeof(float);
 
-constexpr dim3 block(256);
-constexpr dim3 grid((len - 1) / block.x + 1);
+const dim3 block(256);
+const dim3 grid((len - 1) / block.x + 1);
 
 __global__ void add_scalar(float* arr, size_t len, float scalar)
 {

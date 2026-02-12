@@ -129,14 +129,14 @@ struct Arguments {
       else if (arg == "--dump-book") {
         dump_book = true;
       }
-      else if (arg == "--type" and i + 1 < argc) {
+      else if (arg == "--type" && i + 1 < argc) {
         type = argv[++i];
       }
-      else if (arg == "--test" and i + 1 < argc) {
+      else if (arg == "--test" && i + 1 < argc) {
         which_test = std::atoi(argv[++i]);
       }
       else {
-        printf("Unknown or incomplete argument: %s\n", arg.c_str());
+        printf("Unknown || incomplete argument: %s\n", arg.c_str());
         print_usage(argv[0]);
         return false;
       }
@@ -217,7 +217,7 @@ void hf_run_2(std::string fname, size_t const len, size_t const bklen = 1024)
 int main(int argc, char** argv)
 {
   Arguments args;
-  if (not args.parse(argc, argv)) { return 1; }
+  if (! args.parse(argc, argv)) { return 1; }
 
   size_t len = args.total_len();
 

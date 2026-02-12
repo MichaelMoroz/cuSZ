@@ -28,5 +28,5 @@ u4 count_outlier(T* in, size_t inlen, int radius, void* stream)
 #endif
 
   return thrust::count_if(
-      thrust::device, in, in + inlen, _1 >= 2 * radius or _1 < 0);
+      thrust::device, in, in + inlen, _1 >= 2 * radius || _1 < 0);
 }

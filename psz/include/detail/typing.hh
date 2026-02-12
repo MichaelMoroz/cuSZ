@@ -5,7 +5,7 @@
 #include "cxx_typing.h"
 
 /**
- * @brief CUDA API does not accept u8 (understandable by literal), but instead,
+ * @brief CUDA API does ! accept u8 (understandable by literal), but instead,
  * `unsigned long long`, which is ambiguous anyway.
  */
 template <typename T>

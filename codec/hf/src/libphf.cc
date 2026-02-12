@@ -41,7 +41,7 @@ size_t phf_coarse_tune_sublen(size_t len)
 #elif defined(PHF_USE_1API)
   int current_dev = 0;
   /*
-  DPCT1093:0: The "current_dev" device may be not the one intended for use.
+  DPCT1093:0: The "current_dev" device may be ! the one intended for use.
   Adjust the selected device if needed.
   */
   dpct::select_device(current_dev);

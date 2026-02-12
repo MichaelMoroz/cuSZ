@@ -1,7 +1,11 @@
 #include "mem/cxx_memobj.h"
 
 // The next-line: failsafe macro check
+#ifdef _WIN32
+#include <limits.h>
+#else
 #include <linux/limits.h>
+#endif
 
 #include <fstream>
 #include <iostream>
@@ -61,7 +65,7 @@ struct memobj<Ctype>::impl {
   {
     if (_len == 0) {
       _dbg();
-      throw std::runtime_error("'" + string(name) + "'\tLen == 0 is not allowed.");
+      throw std::runtime_error("'" + string(name) + "'\tLen == 0 is ! allowed.");
     }
   }
 
@@ -95,7 +99,7 @@ struct memobj<Ctype>::impl {
 
   void malloc_shared(void* stream = nullptr)
   {
-    if (d_borrowed or h_borrowed)
+    if (d_borrowed || h_borrowed)
       throw std::runtime_error(string(name) + ": cannot malloc borrowed uniptr.");
 
     if (uni == nullptr) {
@@ -109,9 +113,9 @@ struct memobj<Ctype>::impl {
   }
 
   // clang-format off
-  void free_device(void* stream = nullptr) { if (d and not d_borrowed) ::free_device(d, stream); }
-  void free_host(void* stream = nullptr)   { if (h and not h_borrowed) ::free_host(h, stream); }
-  void free_shared(void* stream = nullptr) { if (uni and not d_borrowed and not h_borrowed) ::free_shared(uni, stream); }
+  void free_device(void* stream = nullptr) { if (d && ! d_borrowed) ::free_device(d, stream); }
+  void free_host(void* stream = nullptr)   { if (h && ! h_borrowed) ::free_host(h, stream); }
+  void free_shared(void* stream = nullptr) { if (uni && ! d_borrowed && ! h_borrowed) ::free_shared(uni, stream); }
   void h2d() { memcpy_allkinds<H2D>(d, h, _len); }
   void d2h() { memcpy_allkinds<D2H>(h, d, _len); }
   void h2d_async(void* stream) { memcpy_allkinds_async<H2D>(d, h, _len, stream); }
@@ -130,7 +134,7 @@ struct memobj<Ctype>::impl {
   void fromfile(const char* fname)
   {
     std::ifstream ifs(fname, std::ios::binary | std::ios::in);
-    if (not ifs.is_open()) {
+    if (! ifs.is_open()) {
       std::cerr << "fail to open " << fname << std::endl;
       exit(1);
     }
@@ -141,7 +145,7 @@ struct memobj<Ctype>::impl {
   void tofile(const char* fname)
   {
     std::ofstream ofs(fname, std::ios::binary | std::ios::out);
-    if (not ofs.is_open()) {
+    if (! ofs.is_open()) {
       std::cerr << "fail to open " << fname << std::endl;
       exit(1);
     }
@@ -151,30 +155,30 @@ struct memobj<Ctype>::impl {
 
   void extrema_scan(double& max_value, double& min_value, double& range)
   {
-    constexpr auto type_supported = std::is_same_v<Ctype, float> or std::is_same_v<Ctype, double>;
+    constexpr auto type_supported = std::is_same_v<Ctype, float> || std::is_same_v<Ctype, double>;
 
     if (type_supported)
       psz::analysis::GPU_probe_extrema<Ctype, CUDA>(d, _len, max_value, min_value, range);
     else
-      throw std::runtime_error("`extrema_scan` supports `float` or `double` for now.");
+      throw std::runtime_error("`extrema_scan` supports `float` || `double` for now.");
   }
 
   // setter by borrowing
   void dptr(Ctype* d)
   {
-    if (d == nullptr) throw std::runtime_error("`d` arg. must not be nil.");
+    if (d == nullptr) throw std::runtime_error("`d` arg. must ! be nil.");
     _borrow(d, nullptr);
   }
 
   void hptr(Ctype* h)
   {
-    if (h == nullptr) throw std::runtime_error("`h` arg. must not be nil.");
+    if (h == nullptr) throw std::runtime_error("`h` arg. must ! be nil.");
     _borrow(nullptr, h);
   }
 
   void uniptr(Ctype* uni)
   {
-    if (uni == nullptr) throw std::runtime_error("`uni` arg. must not be nil.");
+    if (uni == nullptr) throw std::runtime_error("`uni` arg. must ! be nil.");
     // to decrease the complexity of C impl.
     uni = uni, d_borrowed = h_borrowed = true;
   }
@@ -305,7 +309,7 @@ memobj<Ctype>* memobj<Ctype>::file(const char* fname, control_t control)
   else if (control == FromFile)
     pimpl->fromfile(fname);
   else
-    throw std::runtime_error("must be `FromFile` or `ToFile`");
+    throw std::runtime_error("must be `FromFile` || `ToFile`");
 
   return this;
 }

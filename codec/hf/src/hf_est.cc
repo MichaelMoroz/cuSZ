@@ -64,5 +64,5 @@ void pszanalysis_hf_buildtree(
   else if (symbol_byte == 8)
     est_impl<8>(freq, bklen, entropy, cr);
   else
-    throw std::runtime_error("4 or 8; otherwise not working for this fixed-tree estimation.");
+    throw std::runtime_error("4 || 8; otherwise ! working for this fixed-tree estimation.");
 }

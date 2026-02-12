@@ -102,12 +102,12 @@ void phf_CPU_build_canonized_codebook_v2(
     auto pw4 = reinterpret_cast<PW4*>(bk4 + i);
 
     if (*(bk8 + i) == ~((uint64_t)0x0)) {
-      //   // not meaningful
+      //   // ! meaningful
     }
     else {
       if (pw8->bitcount > pw4->FIELD_CODE) {
         pw4->bitcount = pw4->OUTLIER_CUTOFF;
-        pw4->prefix_code = 0;  // not meaningful
+        pw4->prefix_code = 0;  // ! meaningful
         cout << i << "\tlarger than FIELD_CODE" << endl;
       }
       else {

@@ -52,7 +52,8 @@ struct Buf_Comp {
   constexpr static size_t BLK = 8;  // for spline
   constexpr static u2 max_radius = 512;
   constexpr static u2 max_bklen = max_radius * 2;
-  constexpr static float OUTLIER_RATIO = 0.1;
+  // Keep enough capacity for high-outlier regimes on Windows CUDA builds.
+  constexpr static float OUTLIER_RATIO = 1.0;
 
   bool is_comp;
   // const u4 x, y, z;

@@ -13,7 +13,9 @@
 
 #include "cusz/context.h"
 
+#if !defined(_WIN32)
 #include <cxxabi.h>
+#endif
 
 #include <fstream>
 
@@ -191,10 +193,10 @@ std::pair<std::string, bool> psz::str_helper::parse_kv_onoff(std::string in_str)
 
       std::smatch v_match;
       if (std::regex_match(v, v_match, onoff_pattern)) {  //
-        onoff = (v == "on") or (v == "ON");
+        onoff = (v == "on") || (v == "ON");
       }
       else {
-        throw std::runtime_error("not legal (k=v)-syntax");
+        throw std::runtime_error("! legal (k=v)-syntax");
       }
     }
   }
@@ -231,26 +233,26 @@ std::string psz::str_helper::nnz_percentage(uint32_t nnz, uint32_t data_len)
 
 void psz::str_helper::check_cuszmode(const std::string& val)
 {
-  auto legal = (val == "r2r" or val == "rel") or (val == "abs");
-  if (not legal) throw std::runtime_error("`mode` must be \"r2r\" or \"abs\".");
+  auto legal = (val == "r2r" || val == "rel") || (val == "abs");
+  if (! legal) throw std::runtime_error("`mode` must be \"r2r\" || \"abs\".");
 }
 
 bool psz::str_helper::check_dtype(const std::string& val, bool delay_failure)
 {
-  auto legal = (val == "f32") or (val == "f4") or (val == "f64") or (val == "f8");
-  if (not legal)
-    if (not delay_failure)
-      throw std::runtime_error("Only `f32`/`f4` or `f64`/`f8` is supported temporarily.");
+  auto legal = (val == "f32") || (val == "f4") || (val == "f64") || (val == "f8");
+  if (! legal)
+    if (! delay_failure)
+      throw std::runtime_error("Only `f32`/`f4` || `f64`/`f8` is supported temporarily.");
 
   return legal;
 }
 
 bool psz::str_helper::check_dtype(const psz_dtype& val, bool delay_failure)
 {
-  auto legal = (val == F4) or (val == F8);
-  if (not legal)
-    if (not delay_failure)
-      throw std::runtime_error("Only `f32`/`f4` or `f64`/`f8` is supported temporarily.");
+  auto legal = (val == F4) || (val == F8);
+  if (! legal)
+    if (! delay_failure)
+      throw std::runtime_error("Only `f32`/`f4` || `f64`/`f8` is supported temporarily.");
 
   return legal;
 }
@@ -284,7 +286,7 @@ void psz::str_helper::parse_length_literal(const char* str, std::vector<std::str
   }
 
   // handle 1D
-  if (not checked) { dims.push_back(data_len_literal); }
+  if (! checked) { dims.push_back(data_len_literal); }
 }
 
 size_t psz::str_helper::filesize(std::string fname)
@@ -297,7 +299,7 @@ template <typename T1, typename T2>
 size_t psz::str_helper::get_npart(T1 size, T2 subsize)
 {
   static_assert(
-      std::numeric_limits<T1>::is_integer and std::numeric_limits<T2>::is_integer,
+      std::numeric_limits<T1>::is_integer && std::numeric_limits<T2>::is_integer,
       "[get_npart] must be plain interger types.");
 
   return (size + subsize - 1) / subsize;
@@ -306,7 +308,7 @@ size_t psz::str_helper::get_npart(T1 size, T2 subsize)
 template <typename TRIO>
 bool psz::str_helper::eq(TRIO a, TRIO b)
 {
-  return (a.x == b.x) and (a.y == b.y) and (a.z == b.z);
+  return (a.x == b.x) && (a.y == b.y) && (a.z == b.z);
 }
 
 void psz::str_helper::print_datasegment_tablehead()
@@ -321,6 +323,9 @@ void psz::str_helper::print_datasegment_tablehead()
 
 std::string psz::str_helper::demangle(const char* name)
 {
+#if defined(_WIN32)
+  return std::string(name);
+#else
   int status = -4;
   char* res = abi::__cxa_demangle(name, nullptr, nullptr, &status);
 
@@ -328,6 +333,7 @@ std::string psz::str_helper::demangle(const char* name)
   std::string ret_val(demangled_name);
   free(res);
   return ret_val;
+#endif
 }
 
 void psz::str_helper::set_report(psz_ctx* ctx, const char* in_str)
@@ -365,19 +371,19 @@ void psz::str_helper::set_datadump(psz_ctx* ctx, const char* in_str)
     if (psz::str_helper::is_kv_pair(o)) {
       auto kv = psz::str_helper::parse_kv_onoff(o);
 
-      if (kv.first == "quantcode" or kv.first == "quant")
+      if (kv.first == "quantcode" || kv.first == "quant")
         ctx->cli->dump_quantcode = kv.second;
-      else if (kv.first == "histogram" or kv.first == "hist")
+      else if (kv.first == "histogram" || kv.first == "hist")
         ctx->cli->dump_hist = kv.second;
-      else if (kv.first == "full_huffman_binary" or kv.first == "full_hf")
+      else if (kv.first == "full_huffman_binary" || kv.first == "full_hf")
         ctx->cli->dump_full_hf = kv.second;
     }
     else {
-      if (o == "quantcode" or o == "quant")
+      if (o == "quantcode" || o == "quant")
         ctx->cli->dump_quantcode = true;
-      else if (o == "histogram" or o == "hist")
+      else if (o == "histogram" || o == "hist")
         ctx->cli->dump_hist = true;
-      else if (o == "full_huffman_binary" or o == "full_hf")
+      else if (o == "full_huffman_binary" || o == "full_hf")
         ctx->cli->dump_full_hf = true;
     }
   }
@@ -401,7 +407,7 @@ void psz::str_helper::parse_control_string_Hi(psz_ctx* ctx, const char* in_str, 
   auto optmatch = [&](std::vector<std::string> vs) -> bool {
     return psz::str_helper::check_opt_in_list(k, vs);
   };
-  auto is_enabled = [&](auto& v) -> bool { return v == "on" or v == "ON"; };
+  auto is_enabled = [&](auto& v) -> bool { return v == "on" || v == "ON"; };
 
   for (auto kv : opts) {
     k = kv.first;
@@ -409,9 +415,9 @@ void psz::str_helper::parse_control_string_Hi(psz_ctx* ctx, const char* in_str, 
 
     //// cuSZ-Hi configs
     if (optmatch({"auto_tuning", "auto-tuning"})) {
-      if (v == "cr-first" or v == "CR-first")
+      if (v == "cr-first" || v == "CR-first")
         CLI_interp_params(ctx)->auto_tuning = 3;
-      else if (v == "rd-first" or v == "RD-first")
+      else if (v == "rd-first" || v == "RD-first")
         CLI_interp_params(ctx)->auto_tuning = 6;
       else {
         try {
@@ -419,7 +425,7 @@ void psz::str_helper::parse_control_string_Hi(psz_ctx* ctx, const char* in_str, 
         }
         catch (...) {
           std::cerr << "[Error] Invalid `auto_tuning` value: " << v
-                    << ". Expected cr-first, rd-first, or an integer.\n";
+                    << ". Expected cr-first, rd-first, || an integer.\n";
           exit(1);
         }
       }
@@ -510,7 +516,7 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
       else if (optmatch({"-m", "--mode"})) {
         check_next();
         auto _ = std::string(argv[++i]);
-        ctx->header->rc.mode = (_ == "r2r" or _ == "rel") ? Rel : Abs;
+        ctx->header->rc.mode = (_ == "r2r" || _ == "rel") ? Rel : Abs;
         if (ctx->header->rc.mode == Rel) ctx->cli->rel_range_scan = true;
         strcpy(ctx->cli->char_mode, _.c_str());
       }
@@ -525,18 +531,18 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
         auto v = std::string(argv[++i]);
         strcpy(ctx->cli->char_predictor_name, v.c_str());
 
-        if (v == "spline" or v == "spline3" or v == "spl")
+        if (v == "spline" || v == "spline3" || v == "spl")
           ctx->header->pipeline.predictor = psz_predictor::Spline;
-        else if (v == "lorenzo" or v == "lrz")
+        else if (v == "lorenzo" || v == "lrz")
           ctx->header->pipeline.predictor = psz_predictor::Lorenzo;
-        else if (v == "lorenzo-zigzag" or v == "lrz-zz")
+        else if (v == "lorenzo-zigzag" || v == "lrz-zz")
           ctx->header->pipeline.predictor = psz_predictor::LorenzoZigZag;
-        else if (v == "lorenzo-proto" or v == "lrz-proto")
+        else if (v == "lorenzo-proto" || v == "lrz-proto")
           ctx->header->pipeline.predictor = psz_predictor::LorenzoProto;
         else
           printf(
               "[psz::warning::parser] "
-              "\"%s\" is not a supported predictor; "
+              "\"%s\" is ! a supported predictor; "
               "fallback to \"lorenzo\".",
               v.c_str());
       }
@@ -555,7 +561,7 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
         auto v = std::string(argv[++i]);
         strcpy(ctx->cli->char_codec1_name, v.c_str());
 
-        if (v == "huffman" or v == "hf")
+        if (v == "huffman" || v == "hf")
           ctx->header->pipeline.codec1 = psz_codec::Huffman;
         else if (v == "fzgcodec")
           ctx->header->pipeline.codec1 = psz_codec::FZCodec;
@@ -563,9 +569,9 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
       else if (optmatch({"-t", "--type", "--dtype"})) {
         check_next();
         std::string s = std::string(std::string(argv[++i]));
-        if (s == "f32" or s == "f4")
+        if (s == "f32" || s == "f4")
           ctx->header->dtype = F4;
-        else if (s == "f64" or s == "f8")
+        else if (s == "f64" || s == "f8")
           ctx->header->dtype = F8;
       }
       else if (optmatch({"-i", "--input"})) {
@@ -610,9 +616,9 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
       else if (optmatch({"-a", "--auto"})) {
         check_next();
         std::string at_mode = argv[++i];
-        if (at_mode == "cr-first" or at_mode == "CR-first")
+        if (at_mode == "cr-first" || at_mode == "CR-first")
           CLI_interp_params(ctx)->auto_tuning = 3;
-        else if (at_mode == "rd-first" or at_mode == "RD-first")
+        else if (at_mode == "rd-first" || at_mode == "RD-first")
           CLI_interp_params(ctx)->auto_tuning = 6;
         else {
           try {
@@ -620,7 +626,7 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
           }
           catch (...) {
             std::cerr << "[Error] Unknown auto-tuning mode: " << at_mode
-                      << ". Supported: cr-first, rd-first, or an integer value." << std::endl;
+                      << ". Supported: cr-first, rd-first, || an integer value." << std::endl;
             exit(1);
           }
         }
@@ -628,8 +634,8 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
       else if (optmatch({"-s", "--scheme"})) {
         check_next();
         auto _ = std::string(argv[++i]);
-        if (_ == "tp" or _ == "TP" or _ == "speed") { ctx->header->pipeline.codec1 = LC; }
-        else if (_ == "cr" or _ == "CR") {
+        if (_ == "tp" || _ == "TP" || _ == "speed") { ctx->header->pipeline.codec1 = LC; }
+        else if (_ == "cr" || _ == "CR") {
           ctx->header->pipeline.codec1 = Huffman;
         }
       }
@@ -637,27 +643,26 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
 #if defined(PSZ_USE_1API)
         check_next();
         auto _v = string(argv[++i]);
-        if (_v == "cpu" or _v == "CPU")
+        if (_v == "cpu" || _v == "CPU")
           ctx->device = CPU;
-        else if (_v == "gpu" or _v == "GPU")
+        else if (_v == "gpu" || _v == "GPU")
           ctx->device = INTELGPU;
         else
           ctx->device = INTELGPU;
 
 #else
         throw std::runtime_error(
-            "[psz::error] --sycl-device is not supported backend other than "
+            "[psz::error] --sycl-device is ! supported backend other than "
             "CUDA/HIP.");
 #endif
       }
       else {
         const char* notif_prefix = "invalid option value at position ";
-        char* notif;
-        int size = asprintf(&notif, "%d: %s", i, argv[i]);
+        std::string notif = std::to_string(i) + ": " + argv[i];
         cerr << LOG_ERR << notif_prefix << "\e[1m" << notif << "\e[0m" << "\n";
         cerr << std::string(strlen(LOG_NULL) + strlen(notif_prefix), ' ');
         cerr << "\e[1m";
-        cerr << std::string(strlen(notif), '~');
+        cerr << std::string(notif.size(), '~');
         cerr << "\e[0m\n";
 
         std::cout << LOG_ERR << "Exiting..." << endl;
@@ -666,14 +671,13 @@ void psz::str_helper::parse_argv(psz_ctx* ctx, int const argc, char** const argv
     }
     else {
       const char* notif_prefix = "invalid option at position ";
-      char* notif;
-      int size = asprintf(&notif, "%d: %s", i, argv[i]);
+      std::string notif = std::to_string(i) + ": " + argv[i];
       cerr << LOG_ERR << notif_prefix << "\e[1m" << notif
            << "\e[0m"
               "\n"
            << std::string(strlen(LOG_NULL) + strlen(notif_prefix), ' ')  //
            << "\e[1m"                                                    //
-           << std::string(strlen(notif), '~')                            //
+           << std::string(notif.size(), '~')                             //
            << "\e[0m\n";
 
       std::cout << LOG_ERR << "Exiting..." << endl;
@@ -716,8 +720,8 @@ void psz::str_helper::validate_args(psz_ctx* ctx)
     to_abort = true;
   }
 
-  if (not ctx->cli->task_construct and not ctx->cli->task_reconstruct) {
-    cerr << LOG_ERR << "select compress (-z) or decompress (-x)." << endl;
+  if (! ctx->cli->task_construct && ! ctx->cli->task_reconstruct) {
+    cerr << LOG_ERR << "select compress (-z) || decompress (-x)." << endl;
     to_abort = true;
   }
   if (false == psz::str_helper::check_dtype(ctx->header->dtype)) {
@@ -778,51 +782,42 @@ void psz::str_helper::set_radius(psz_ctx* ctx, int _)
 
 psz_ctx* pszctx_default_values()
 {
-  return new psz_ctx{
-      .header =
-          new psz_header{
-              .dtype = F4,
-              {
-                  .predictor = DEFAULT_PREDICTOR,
-                  .hist = DEFAULT_HISTOGRAM,
-                  .codec1 = DEFAULT_CODEC,
-                  .codec2 = NullCodec,
-              },
-              {
-                  .mode = Rel,
-                  .eb = 0.1,
-                  .radius = 512,
-              },
-              .vle_sublen = 512,
-              .vle_pardeg = -1,
-              .len =
-                  {
-                      .x = 1,
-                      .y = 1,
-                      .z = 1,
-                  },
-              .splen = 0,
-              .intp_param = make_default_params(),
-          },
-      .cli =
-          new psz_cli_config{
-              .dump_quantcode = false,
-              .dump_hist = false,
-              .task_construct = false,
-              .task_reconstruct = false,
-              .rel_range_scan = false,
-              .use_gpu_verify = false,
-              .skip_tofile = false,
-              .skip_hf = false,
-              .report_time = false,
-              .report_cr = false,
-              .verbose = false,
-          },
-      .dict_size = 1024,
-      .len_linear = 1,
-      .ndim = -1,
-      .there_is_memerr = false,
-  };
+  auto ctx = new psz_ctx{};
+  ctx->header = new psz_header{};
+  ctx->header->dtype = F4;
+  ctx->header->pipeline.predictor = DEFAULT_PREDICTOR;
+  ctx->header->pipeline.hist = DEFAULT_HISTOGRAM;
+  ctx->header->pipeline.codec1 = DEFAULT_CODEC;
+  ctx->header->pipeline.codec2 = NullCodec;
+  ctx->header->rc.mode = Rel;
+  ctx->header->rc.eb = 0.1;
+  ctx->header->rc.radius = 512;
+  ctx->header->vle_sublen = 512;
+  ctx->header->vle_pardeg = -1;
+  ctx->header->len.x = 1;
+  ctx->header->len.y = 1;
+  ctx->header->len.z = 1;
+  ctx->header->splen = 0;
+  ctx->header->intp_param = make_default_params();
+
+  ctx->cli = new psz_cli_config{};
+  ctx->cli->dump_quantcode = false;
+  ctx->cli->dump_hist = false;
+  ctx->cli->task_construct = false;
+  ctx->cli->task_reconstruct = false;
+  ctx->cli->rel_range_scan = false;
+  ctx->cli->use_gpu_verify = false;
+  ctx->cli->skip_tofile = false;
+  ctx->cli->skip_hf = false;
+  ctx->cli->report_time = false;
+  ctx->cli->report_cr = false;
+  ctx->cli->verbose = false;
+
+  ctx->dict_size = 1024;
+  ctx->len_linear = 1;
+  ctx->ndim = -1;
+  ctx->there_is_memerr = false;
+  return ctx;
 }
 
 void pszctx_set_default_values(psz_ctx* empty_ctx)

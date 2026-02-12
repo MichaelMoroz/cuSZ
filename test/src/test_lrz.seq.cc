@@ -148,19 +148,19 @@ int main()
   auto P = true;
 
   // clang-format off
-  P = P and test1(LRZ_C1, const_cast<T*>(t1_in), t1_len, t1_len3, t1_leap3, t1_comp_out, "LRZ_C1");
-  P = P and test1(LRZ_C2, const_cast<T*>(t2_in), t2_len, t2_len3, t2_leap3, t2_comp_out, "LRZ_C2");
-  P = P and test1(LRZ_C3, const_cast<T*>(t3_in), t3_len, t3_len3, t3_leap3, t3_comp_out, "LRZ_C3");
+  P = P && test1(LRZ_C1, const_cast<T*>(t1_in), t1_len, t1_len3, t1_leap3, t1_comp_out, "LRZ_C1");
+  P = P && test1(LRZ_C2, const_cast<T*>(t2_in), t2_len, t2_len3, t2_leap3, t2_comp_out, "LRZ_C2");
+  P = P && test1(LRZ_C3, const_cast<T*>(t3_in), t3_len, t3_len3, t3_leap3, t3_comp_out, "LRZ_C3");
   printf("\n");
 
-  P = P and test2(LRZ_X1, const_cast<Eq*>(t1_eq), t1_len, t1_len3, t1_leap3, t1_decomp_out, "LRZ_X1");
-  P = P and test2(LRZ_X2, const_cast<Eq*>(t2_eq), t2_len, t2_len3, t2_leap3, t2_decomp_out, "LRZ_X2");
-  P = P and test2(LRZ_X3, const_cast<Eq*>(t3_eq), t3_len, t3_len3, t3_leap3, t3_decomp_out, "LRZ_X3");
+  P = P && test2(LRZ_X1, const_cast<Eq*>(t1_eq), t1_len, t1_len3, t1_leap3, t1_decomp_out, "LRZ_X1");
+  P = P && test2(LRZ_X2, const_cast<Eq*>(t2_eq), t2_len, t2_len3, t2_leap3, t2_decomp_out, "LRZ_X2");
+  P = P && test2(LRZ_X3, const_cast<Eq*>(t3_eq), t3_len, t3_len3, t3_leap3, t3_decomp_out, "LRZ_X3");
   printf("\n");
 
-  P = P and test3(LRZ_C1, LRZ_X1, const_cast<T*>(t1_in), t1_len, t1_len3, t1_leap3, "LRZ_CX1");
-  P = P and test3(LRZ_C2, LRZ_X2, const_cast<T*>(t2_in), t2_len, t2_len3, t2_leap3, "LRZ_CX2");
-  P = P and test3(LRZ_C3, LRZ_X3, const_cast<T*>(t3_in), t3_len, t3_len3, t3_leap3, "LRZ_CX3");
+  P = P && test3(LRZ_C1, LRZ_X1, const_cast<T*>(t1_in), t1_len, t1_len3, t1_leap3, "LRZ_CX1");
+  P = P && test3(LRZ_C2, LRZ_X2, const_cast<T*>(t2_in), t2_len, t2_len3, t2_leap3, "LRZ_CX2");
+  P = P && test3(LRZ_C3, LRZ_X3, const_cast<T*>(t3_in), t3_len, t3_len3, t3_leap3, "LRZ_CX3");
   // clang-format on
 
   if (P)

@@ -82,9 +82,9 @@ __global__ void KERNEL_CUHIP_c_lorenzo_1d(
           quantizable * static_cast<typename PC::EqUInt>(candidate);
     }
 
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = atomicAdd(out_cn, 1);
-      if (cur_idx <= cn_max_allowed)
+      if (cur_idx < cn_max_allowed)
         out_cval_cidx[cur_idx] = {(float)candidate, id_base + threadIdx.x * Seq + ix};
     }
   }
@@ -138,7 +138,7 @@ __global__ [[deprecated]] void KERNEL_CUHIP_c_lorenzo_2d1l(
 // read to private.in_data (center)
 #pragma unroll
   for (auto iy = 0; iy < Yseq; iy++) {
-    if (gix < data_len3.x and giy_base + iy < data_len3.y)
+    if (gix < data_len3.x && giy_base + iy < data_len3.y)
       center[iy + 1] = round(in_data[g_id(iy)] * ebx2_r);
   }
   // same-warp, next-16
@@ -160,7 +160,7 @@ __global__ [[deprecated]] void KERNEL_CUHIP_c_lorenzo_2d1l(
   for (auto i = 1; i < Yseq + 1; i++) {
     auto gid = g_id(i - 1);
 
-    if (gix < data_len3.x and giy_base + (i - 1) < data_len3.y) {
+    if (gix < data_len3.x && giy_base + (i - 1) < data_len3.y) {
       bool quantizable = fabs(center[i]) < radius;
       T candidate;
 
@@ -173,7 +173,7 @@ __global__ [[deprecated]] void KERNEL_CUHIP_c_lorenzo_2d1l(
         out_eq[gid] = quantizable * (EqUInt)candidate;
       }
 
-      if (not quantizable) {
+      if (! quantizable) {
         auto cur_idx = atomicAdd(out_cn, 1);
         out_cidx[cur_idx] = gid;
         out_cval[cur_idx] = candidate;
@@ -212,7 +212,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_2d__32x32(
 // read to private.in_data (center)
 #pragma unroll
   for (auto iy = 0; iy < Yseq; iy++) {
-    if (gix < data_lenx and giy_base + iy < data_leny)
+    if (gix < data_lenx && giy_base + iy < data_leny)
       center[iy + 1] = round(in_data[g_id(iy)] * ebx2_r);
   }
   if (threadIdx.y < NumWarps - 1) exchange[threadIdx.y][threadIdx.x] = center[Yseq];
@@ -233,7 +233,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_2d__32x32(
     auto gid = g_id(i - 1);
 
     bool quantizable = fabs(center[i]) < radius;
-    bool is_valid_range = (gix < data_lenx and (giy_base + i - 1) < data_leny);
+    bool is_valid_range = (gix < data_lenx && (giy_base + i - 1) < data_leny);
 
     if constexpr (PC::UseStatLocal == Toggle::StatLocalEnabled) {
       COUNT_LOCAL_STAT(center[i], is_valid_range);
@@ -252,10 +252,10 @@ __global__ void KERNEL_CUHIP_c_lorenzo_2d__32x32(
       if (is_valid_range) out_eq[gid] = quantizable * static_cast<typename PC::EqUInt>(candidate);
     }
 
-    if (not quantizable) {
-      if (gix < data_lenx and (giy_base + i - 1) < data_leny) {
+    if (! quantizable) {
+      if (gix < data_lenx && (giy_base + i - 1) < data_leny) {
         auto cur_idx = atomicAdd(out_cn, 1);
-        if (cur_idx <= cn_max_allowed) out_cval_cidx[cur_idx] = {(float)candidate, gid};
+        if (cur_idx < cn_max_allowed) out_cval_cidx[cur_idx] = {(float)candidate, gid};
       }
     }
   }
@@ -299,7 +299,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d(
   auto gid = [&](auto z) { return base_id + z * data_leapz; };
 
   auto load_prequant_3d = [&]() {
-    if (gix < data_lenx and giy < data_leny) {
+    if (gix < data_lenx && giy < data_leny) {
       for (auto z = 0; z < TileDim; z++)
         if (giz(z) < data_lenz)
           delta[z + 1] = round(in_data[gid(z)] * ebx2_r);  // prequant (fp presence)
@@ -310,7 +310,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d(
   auto quantize_compact_write = [&](T delta, auto x, auto y, auto z, auto gid) {
     bool quantizable = fabs(delta) < radius;
 
-    if (x < data_lenx and y < data_leny and z < data_lenz) {
+    if (x < data_lenx && y < data_leny && z < data_lenz) {
       T candidate;
 
       if constexpr (PC::UseZigZag == Toggle::ZigZagEnabled) {
@@ -323,9 +323,9 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d(
         out_eq[gid] = quantizable * static_cast<typename PC::EqUInt>(candidate);
       }
 
-      if (not quantizable) {
+      if (! quantizable) {
         auto cur_idx = atomicAdd(out_cn, 1);
-        if (cur_idx <= cn_max_allowed) out_cval_cidx[cur_idx] = {(float)candidate, gid};
+        if (cur_idx < cn_max_allowed) out_cval_cidx[cur_idx] = {(float)candidate, gid};
       }
     }
   };
@@ -352,7 +352,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d(
     delta[z] -= (threadIdx.y > 0) * s[threadIdx.y][threadIdx.x];
 
     if constexpr (PC::UseStatLocal == Toggle::StatLocalEnabled) {
-      auto is_valid_range = (gix < data_lenx and giy < data_leny and giz(z - 1) < data_lenz);
+      auto is_valid_range = (gix < data_lenx && giy < data_leny && giz(z - 1) < data_lenz);
       COUNT_LOCAL_STAT(delta[z], is_valid_range);
     }
 
@@ -384,7 +384,7 @@ __global__ [[deprecated]] void KERNEL_CUHIP_lorenzo_prequant(
   for (auto ix = 0; ix < Seq; ix++) {
     auto id = id_base + threadIdx.x + ix * NumThreads;
     // dram to dram
-    if constexpr (not ReverseProcess) {
+    if constexpr (! ReverseProcess) {
       if (id < in_len) out[id] = round(in[id] * ebx2_r);
     }
     else {

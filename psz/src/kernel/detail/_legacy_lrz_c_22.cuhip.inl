@@ -26,7 +26,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_1d1l(
 
   constexpr auto NTHREAD = BLOCK / SEQ;
 
-  __shared__ T scratch[BLOCK];  // for data and outlier
+  __shared__ T scratch[BLOCK];  // for data && outlier
   __shared__ Eq s_eq[BLOCK];
 
   T prev{0};
@@ -114,7 +114,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d1l_legacy(
   auto gid = [&](auto y) { return base_id + y * stride3.y; };
 
   auto load_prequant_3d = [&]() {
-    if (gix < len3.x and giz < len3.z) {
+    if (gix < len3.x && giz < len3.z) {
       for (auto y = 0; y < BLOCK; y++)
         if (giy(y) < len3.y)
           s[z][y][threadIdx.x] = round(data[gid(y)] * ebx2_r);  // prequant (fp presence)
@@ -125,9 +125,9 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d1l_legacy(
   auto quantize_write = [&](T delta, auto x, auto y, auto z, auto gid) {
     bool quantizable = fabs(delta) < radius;
     T candidate = delta + radius;
-    if (x < len3.x and y < len3.y and z < len3.z) {
+    if (x < len3.x && y < len3.y && z < len3.z) {
       eq[gid] = quantizable * static_cast<Eq>(candidate);
-      outlier[gid] = (not quantizable) * candidate;
+      outlier[gid] = (! quantizable) * candidate;
     }
   };
 
@@ -135,10 +135,10 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d1l_legacy(
 
   auto predict_3d = [&](auto y) {
     T delta = s[z][y][threadIdx.x] -                                               //
-              ((z > 0 and y > 0 and x > 0 ? s[z - 1][y - 1][threadIdx.x - 1] : 0)  // dist=3
-               - (y > 0 and x > 0 ? s[z][y - 1][threadIdx.x - 1] : 0)              // dist=2
-               - (z > 0 and x > 0 ? s[z - 1][y][threadIdx.x - 1] : 0)              //
-               - (z > 0 and y > 0 ? s[z - 1][y - 1][threadIdx.x] : 0)              //
+              ((z > 0 && y > 0 && x > 0 ? s[z - 1][y - 1][threadIdx.x - 1] : 0)  // dist=3
+               - (y > 0 && x > 0 ? s[z][y - 1][threadIdx.x - 1] : 0)              // dist=2
+               - (z > 0 && x > 0 ? s[z - 1][y][threadIdx.x - 1] : 0)              //
+               - (z > 0 && y > 0 ? s[z - 1][y - 1][threadIdx.x] : 0)              //
                + (x > 0 ? s[z][y][threadIdx.x - 1] : 0)                            // dist=1
                + (y > 0 ? s[z][y - 1][threadIdx.x] : 0)                            //
                + (z > 0 ? s[z - 1][y][threadIdx.x] : 0));                          //
@@ -174,7 +174,7 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d1l(
   auto gid = [&](auto z) { return base_id + z * stride3.z; };
 
   auto load_prequant_3d = [&]() {
-    if (gix < len3.x and giy < len3.y) {
+    if (gix < len3.x && giy < len3.y) {
       for (auto z = 0; z < BLOCK; z++)
         if (giz(z) < len3.z)
           delta[z + 1] = round(data[gid(z)] * ebx2_r);  // prequant (fp presence)
@@ -185,9 +185,9 @@ __global__ void KERNEL_CUHIP_c_lorenzo_3d1l(
   auto quantize_write = [&](T delta, auto x, auto y, auto z, auto gid) {
     bool quantizable = fabs(delta) < radius;
     T candidate = delta + radius;
-    if (x < len3.x and y < len3.y and z < len3.z) {
+    if (x < len3.x && y < len3.y && z < len3.z) {
       eq[gid] = quantizable * static_cast<Eq>(candidate);
-      outlier[gid] = (not quantizable) * candidate;
+      outlier[gid] = (! quantizable) * candidate;
     }
   };
 

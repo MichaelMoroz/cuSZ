@@ -84,7 +84,7 @@ void c_lorenzo_2d1l(
         for (size_t i0 = 0; i0 < B; i0++) {
             size_t gi1 = _idx1 + i1;
             size_t gi0 = _idx0 + i0;
-            if (gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+            if (gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
             size_t id          = gi0 + gi1 * dims[DIM0];
             _s[i1 + 1][i0 + 1] = round(d[id] * eb_variants[EBx2_r]);
 #ifdef PRED_COMP_ERR
@@ -98,7 +98,7 @@ void c_lorenzo_2d1l(
         for (size_t i0 = 0; i0 < B; i0++) {
             size_t gi1 = _idx1 + i1;
             size_t gi0 = _idx0 + i0;
-            if (gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+            if (gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
             size_t id          = gi0 + gi1 * dims[DIM0];
             Data   pred        = _s[i1 + 1][i0] + _s[i1][i0 + 1] - _s[i1][i0];
             Data   delta       = _s[i1 + 1][i0 + 1] - pred;
@@ -143,7 +143,7 @@ void c_lorenzo_3d1l(
                 size_t gi2 = _idx2 + i2;
                 size_t gi1 = _idx1 + i1;
                 size_t gi0 = _idx0 + i0;
-                if (gi2 >= dims[DIM2] or gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+                if (gi2 >= dims[DIM2] || gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
                 size_t id                  = gi0 + gi1 * dims[DIM0] + gi2 * dims[DIM1] * dims[DIM0];
                 _s[i2 + 1][i1 + 1][i0 + 1] = round(d[id] * eb_variants[EBx2_r]);
 #ifdef PRED_COMP_ERR
@@ -160,7 +160,7 @@ void c_lorenzo_3d1l(
                 size_t gi2 = _idx2 + i2;
                 size_t gi1 = _idx1 + i1;
                 size_t gi0 = _idx0 + i0;
-                if (gi2 >= dims[DIM2] or gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+                if (gi2 >= dims[DIM2] || gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
                 size_t id   = gi0 + gi1 * dims[DIM0] + gi2 * dims[DIM1] * dims[DIM0];
                 Data   pred = _s[i2][i1][i0]                                                             // +, dist=3
                             - _s[i2 + 1][i1][i0] - _s[i2][i1 + 1][i0] - _s[i2][i1][i0 + 1]               // -, dist=2
@@ -212,7 +212,7 @@ void x_lorenzo_2d1l(Data* xd, Data* outlier, Quant* q, size_t const* const dims,
         for (size_t i0 = 0; i0 < B; i0++) {
             size_t gi1 = _idx1 + i1;
             size_t gi0 = _idx0 + i0;
-            if (gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+            if (gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
             const size_t id    = gi0 + gi1 * dims[DIM0];
             Data         pred  = _s[i1][i0 + 1] + _s[i1 + 1][i0] - _s[i1][i0];
             _s[i1 + 1][i0 + 1] = q[id] == 0 ? outlier[id] : static_cast<Data>(pred + (q[id] - radius));
@@ -246,7 +246,7 @@ void x_lorenzo_3d1l(
                 size_t gi2 = _idx2 + i2;
                 size_t gi1 = _idx1 + i1;
                 size_t gi0 = _idx0 + i0;
-                if (gi2 >= dims[DIM2] or gi1 >= dims[DIM1] or gi0 >= dims[DIM0]) continue;
+                if (gi2 >= dims[DIM2] || gi1 >= dims[DIM1] || gi0 >= dims[DIM0]) continue;
                 size_t id   = gi0 + gi1 * dims[DIM0] + gi2 * dims[DIM1] * dims[DIM0];
                 Data   pred = _s[i2][i1][i0]                                                             // +, dist=3
                             - _s[i2 + 1][i1][i0] - _s[i2][i1 + 1][i0] - _s[i2][i1][i0 + 1]               // -, dist=2

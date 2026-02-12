@@ -14,7 +14,7 @@ template <typename T>
 struct in_ball_shifted {
   __device__ bool operator()(T x, T radius) const
   {
-    return x >= 0 and x < 2 * radius;
+    return x >= 0 && x < 2 * radius;
   }
 };
 
@@ -32,7 +32,7 @@ struct eq {
 
 template <typename T>
 struct in_ball_shifted {
-  bool operator()(T x, T radius) const { return x >= 0 and x < 2 * radius; }
+  bool operator()(T x, T radius) const { return x >= 0 && x < 2 * radius; }
 };
 
 template <typename T>

@@ -52,8 +52,8 @@ T* malloc_device(size_t const len, void* stream = nullptr)
   hipMalloc(&__a, len * sizeof(T));
   hipMemset(__a, 0, len * sizeof(T));
 #elif defined(_PORTABLE_USE_1API)
-  if (not stream)
-    throw std::runtime_error("[psz::error] SYCL backend does not allow stream to be null.");
+  if (! stream)
+    throw std::runtime_error("[psz::error] SYCL backend does ! allow stream to be null.");
   __a = sycl::malloc_device<T>(len, *((sycl::queue*)stream));
   ((sycl::queue*)stream)->wait();
 #endif
@@ -71,8 +71,8 @@ T* malloc_host(size_t const len, void* stream = nullptr)
   hipHostMalloc(&__a, len * sizeof(T));
   memset(__a, 0, len * sizeof(T));
 #elif defined(_PORTABLE_USE_1API)
-  if (not stream)
-    throw std::runtime_error("[psz::error] SYCL backend does not allow stream to be null.");
+  if (! stream)
+    throw std::runtime_error("[psz::error] SYCL backend does ! allow stream to be null.");
   __a = sycl::malloc_host<T>(len, *((sycl::queue*)stream));
   ((sycl::queue*)stream)->wait();
 #endif
@@ -90,8 +90,8 @@ T* malloc_unified(size_t const len, void* stream = nullptr)
 #elif defined(_PORTABLE_USE_HIP)
   hipMallocManaged(&__a, len * sizeof(T));
 #elif defined(_PORTABLE_USE_1API)
-  if (not stream)
-    throw std::runtime_error("[psz::error] SYCL backend does not allow stream to be null.");
+  if (! stream)
+    throw std::runtime_error("[psz::error] SYCL backend does ! allow stream to be null.");
   __a = sycl::malloc_unified<T>(len, *((sycl::queue*)stream));
   ((sycl::queue*)stream)->wait();
 #endif
@@ -106,8 +106,8 @@ void free_device(T* __a, void* stream = nullptr)
 #elif defined(_PORTABLE_USE_HIP)
   hipFree(__a);
 #elif defined(_PORTABLE_USE_1API)
-  if (not stream)
-    throw std::runtime_error("[psz::error] SYCL backend does not allow stream to be null.");
+  if (! stream)
+    throw std::runtime_error("[psz::error] SYCL backend does ! allow stream to be null.");
   sycl::free(__a, *((sycl::queue*)stream));
 #endif
 }
@@ -120,8 +120,8 @@ void free_host(T* __a, void* stream = nullptr)
 #elif defined(_PORTABLE_USE_HIP)
   hipHostFree(__a);
 #elif defined(_PORTABLE_USE_1API)
-  if (not stream)
-    throw std::runtime_error("[psz::error] SYCL backend does not allow stream to be null.");
+  if (! stream)
+    throw std::runtime_error("[psz::error] SYCL backend does ! allow stream to be null.");
   sycl::free(__a, *((sycl::queue*)stream));
 #endif
 }
@@ -146,8 +146,8 @@ void memcpy_allkinds(T* dst, T* src, size_t const len, void* stream = nullptr)
 #elif defined(_PORTABLE_USE_HIP)
   hipMemcpy(dst, src, sizeof(T) * len, direction);
 #elif defined(_PORTABLE_USE_1API)
-  if (not stream) {
-    cerr << "[psz::warning] null queue is not allowed; "
+  if (! stream) {
+    cerr << "[psz::warning] null queue is ! allowed; "
             "fall back to default queue."
          << endl;
     dpct::device_ext& dev = dpct::get_current_device();

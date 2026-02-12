@@ -109,7 +109,7 @@ __forceinline__ __device__ void load_1d(
 
 }
 
-// compression and decompression store
+// compression && decompression store
 template <typename T1, typename T2, int NTHREAD, int SEQ, bool NO_OUTLIER>
 __forceinline__ __device__ void write_1d(  //
     volatile T1* shmem_a1, volatile T2* shmem_a2, uint32_t dimx, uint32_t id_base, T1* a1, T2* a2);
@@ -294,7 +294,7 @@ __forceinline__ __device__ void psz::cuda_hip::predict_quantize_1d(
 
     // otherwise, need to reset shared memory (to 0)
     shmem_quant[idx + threadIdx.x * SEQ] = quantizable * static_cast<EQ>(candidate);
-    shmem_outlier[idx + threadIdx.x * SEQ] = (not quantizable) * candidate;
+    shmem_outlier[idx + threadIdx.x * SEQ] = (! quantizable) * candidate;
   };
 
   if (FIRST_POINT) {  // i == 0
@@ -345,7 +345,7 @@ __forceinline__ __device__ void psz::cuda_hip::load_prequant_2d(
 
 #pragma unroll
   for (auto iy = 0; iy < YSEQ; iy++) {
-    if (gix < dimx and giy_base + iy < dimy) center[iy + 1] = round(data[g_id(iy)] * ebx2_r);
+    if (gix < dimx && giy_base + iy < dimy) center[iy + 1] = round(data[g_id(iy)] * ebx2_r);
   }
   auto tmp = __shfl_up_sync(0xffffffff, center[YSEQ], 16, 32);  // same-warp, next-16
   if (threadIdx.y == 1) center[0] = tmp;
@@ -371,7 +371,7 @@ __forceinline__ __device__ void psz::cuda_hip::predict_2d(T center[YSEQ + 1])
      delta = center[i] - (center[i-1] + west[i] - west[i-1])
            = (center[i] - center[i-1]) - (west[i] - west[i-1])
 
-     With center[i] -= center[i-1] and west[i] -= west[i-1],
+     With center[i] -= center[i-1] && west[i] -= west[i-1],
      delta = center[i] - west[i]
 
      For thread(k),
@@ -408,13 +408,13 @@ __forceinline__ __device__ void psz::cuda_hip::quantize_write_2d(
   for (auto i = 1; i < YSEQ + 1; i++) {
     auto gid = get_gid(i - 1);
 
-    if (gix < dimx and giy_base + (i - 1) < dimy) {
+    if (gix < dimx && giy_base + (i - 1) < dimy) {
       bool quantizable = fabs(delta[i]) < radius;
       T candidate = delta[i] + radius;
 
-      // outlier array is not in sparse form in this version
+      // outlier array is ! in sparse form in this version
       quant[gid] = quantizable * static_cast<EQ>(candidate);
-      outlier[gid] = (not quantizable) * candidate;
+      outlier[gid] = (! quantizable) * candidate;
     }
   }
 }
@@ -434,7 +434,7 @@ __forceinline__ __device__ void psz::cuda_hip::delta_only::quantize_write_2d(
 #pragma unroll
   for (auto i = 1; i < YSEQ + 1; i++) {
     auto gid = get_gid(i - 1);
-    if (gix < dimx and giy_base + (i - 1) < dimy) quant[gid] = static_cast<EQ>(delta[i]);
+    if (gix < dimx && giy_base + (i - 1) < dimy) quant[gid] = static_cast<EQ>(delta[i]);
   }
 }
 
@@ -458,7 +458,7 @@ __forceinline__ __device__ void psz::cuda_hip::load_fuse_2d(
     auto gid = get_gid(i);
     // even if we hit the else branch, all threads in a warp hit the y-boundary
     // simultaneously
-    if (gix < dimx and (giy_base + i) < dimy)
+    if (gix < dimx && (giy_base + i) < dimy)
       thread_private[i] = outlier[gid] + static_cast<T>(quant[gid]) - radius;  // fuse
     else
       thread_private[i] = 0;  // TODO set as init state?
@@ -483,7 +483,7 @@ __forceinline__ __device__ void psz::cuda_hip::delta_only::load_2d(
     auto gid = get_gid(i);
     // even if we hit the else branch, all threads in a warp hit the y-boundary
     // simultaneously
-    if (gix < dimx and (giy_base + i) < dimy)
+    if (gix < dimx && (giy_base + i) < dimy)
       thread_private[i] = static_cast<T>(quant[gid]);
     else
       thread_private[i] = 0;  // TODO set as init state?
@@ -537,7 +537,7 @@ __forceinline__ __device__ void psz::cuda_hip::decomp_write_2d(
 #pragma unroll
   for (auto i = 0; i < YSEQ; i++) {
     auto gid = get_gid(i);
-    if (gix < dimx and (giy_base + i) < dimy) xdata[gid] = thread_private[i];
+    if (gix < dimx && (giy_base + i) < dimy) xdata[gid] = thread_private[i];
   }
 }
 

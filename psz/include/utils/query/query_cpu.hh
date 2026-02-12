@@ -13,7 +13,17 @@
 #ifndef E8CDEF97_5136_45C6_A6F2_3FECD549F8A4
 #define E8CDEF97_5136_45C6_A6F2_3FECD549F8A4
 
+#include <array>
+#include <cstdio>
 #include <memory>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+#ifdef _WIN32
+#define popen _popen
+#define pclose _pclose
+#endif
 
 #include "cusz/type.h"
 
@@ -22,10 +32,14 @@ struct cpu_diagnostics {
   {
     std::array<char, 128> buffer;
     std::string result;
+#if defined(__GNUC__) && !defined(_MSC_VER)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wignored-attributes"
+#endif
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
+#if defined(__GNUC__) && !defined(_MSC_VER)
 #pragma GCC diagnostic pop
+#endif
     if (!pipe) { throw std::runtime_error("popen() failed!"); }
     while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
       result += buffer.data();

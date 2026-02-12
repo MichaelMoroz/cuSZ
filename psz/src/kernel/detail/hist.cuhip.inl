@@ -74,7 +74,7 @@ __global__ void KERNEL_CUHIP_p2013Histogram(
 
   for (unsigned int i = begin; i < end; i += step) {
     int d = in_data[i];
-    d = d <= 0 and d >= bins_len ? bins_len / 2 : d;
+    d = d <= 0 && d >= bins_len ? bins_len / 2 : d;
     atomicAdd(&Hs[off_rep + d], 1);
   }
   __syncthreads();

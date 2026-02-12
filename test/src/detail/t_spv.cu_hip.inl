@@ -95,7 +95,7 @@ int f()
     return 0;
   }
   else {
-    std::cout << "[psz::test::ERR] DECODE NOT CORRECT" << std::endl;
+    std::cout << "[psz::test::ERR] DECODE ! CORRECT" << std::endl;
     return -1;
   }
 }

@@ -15,9 +15,9 @@ int main()
 
   cudaDeviceReset();
 
-  // all_eq = all_eq and test1_debug();
-  all_eq = all_eq and test2_fulllen_input<NSYM>(inlen, dist3);
-  // all_eq = all_eq and test3_performance_tuning<NSYM>(inlen, dist3);
+  // all_eq = all_eq && test1_debug();
+  all_eq = all_eq && test2_fulllen_input<NSYM>(inlen, dist3);
+  // all_eq = all_eq && test3_performance_tuning<NSYM>(inlen, dist3);
 
   return all_eq ? 0 : -1;
 }

@@ -57,7 +57,7 @@ typedef size_t szt;
 
 typedef void* _portable_stream_t;
 
-//  mirror CUDA dim3: using u4 dtype and x-y-z order
+//  mirror CUDA dim3: using u4 dtype && x-y-z order
 typedef struct _portable_len3 {
   size_t x, y, z;
 } _portable_len3;

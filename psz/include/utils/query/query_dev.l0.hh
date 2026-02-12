@@ -14,7 +14,7 @@ struct l0_diagnostics {
   {
     sycl::queue q(sycl::gpu_selector_v);
 
-    // Output platform and device information.
+    // Output platform && device information.
     auto device = q.get_device();
     auto p_name = device.get_platform().get_info<info::platform::name>();
     cout << std::setw(20) << "Platform Name: " << p_name << "\n";

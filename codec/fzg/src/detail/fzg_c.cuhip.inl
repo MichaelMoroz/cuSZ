@@ -22,7 +22,7 @@ __global__ void KERNEL_CUHIP_fz_fused_encode(
   s_data_chunk[threadIdx.y][threadIdx.x] = 0;
   auto tid = threadIdx.y * blockDim.x + threadIdx.x;
   if (tid < 257) s_byteflag_array[tid] = 0;
-  if (threadIdx.y == 0 and threadIdx.x < 8) s_bitflag_array[threadIdx.x] = 0;
+  if (threadIdx.y == 0 && threadIdx.x < 8) s_bitflag_array[threadIdx.x] = 0;
   __syncthreads();
   /* end of resettig shared memory */
 
@@ -55,7 +55,7 @@ __global__ void KERNEL_CUHIP_fz_fused_encode(
   __syncthreads();
 
   // write back bigflag_array to global memory
-  if (threadIdx.x < 8 and threadIdx.y == 0) {
+  if (threadIdx.x < 8 && threadIdx.y == 0) {
     out_bitflag_array[blockIdx.x * 8 + threadIdx.x] = s_bitflag_array[threadIdx.x];
   }
 
@@ -75,7 +75,7 @@ __global__ void KERNEL_CUHIP_fz_fused_encode(
   }
 
   // clear the last element
-  if (threadIdx.x == 0 and threadIdx.y == 0) {
+  if (threadIdx.x == 0 && threadIdx.y == 0) {
     s_byteflag_array[block_size] = s_byteflag_array[block_size - 1];
     s_byteflag_array[block_size - 1] = 0;
   }
@@ -97,7 +97,7 @@ __global__ void KERNEL_CUHIP_fz_fused_encode(
   }
 
   // use atomicAdd to reserve a space for compressed data chunk
-  if (threadIdx.x == 0 and threadIdx.y == 0) {
+  if (threadIdx.x == 0 && threadIdx.y == 0) {
     s_start_position = atomicAdd(space_offset_counter, s_byteflag_array[block_size] * 4);
     out_start_position[blockIdx.x] = s_start_position;
     comp_len[blockIdx.x] = s_byteflag_array[block_size];

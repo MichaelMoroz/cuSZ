@@ -56,7 +56,7 @@ TPL HF_CODEC* HF_CODEC::init(size_t const inlen, int const _booklen, int const _
     printf("\nHuffmanCoarse<E, H4, M>::init() debugging:\n");
     printf("CUdeviceptr nbyte: %d\n", (int)sizeof(dpct::device_ptr));
     hf_debug("SCRATCH", __scratch->dptr(), RC::SCRATCH);
-    // TODO separate 4- and 8- books
+    // TODO separate 4- && 8- books
     // hf_debug("BK", __bk->dptr(), RC::BK);
     // hf_debug("RVBK", __revbk->dptr(), RC::RVBK);
     hf_debug("BITSTREAM", __bitstream->dptr(), RC::BITSTREAM);
@@ -68,7 +68,7 @@ TPL HF_CODEC* HF_CODEC::init(size_t const inlen, int const _booklen, int const _
   pardeg = _pardeg;
   bklen = _booklen;
 
-  // for both u4 and u8 encoding
+  // for both u4 && u8 encoding
 
   // placeholder length
   compressed = new memobj<BYTE>(inlen * TYPICAL, "hf::out4B");
@@ -229,7 +229,7 @@ TPL HF_CODEC* HF_CODEC::dump(std::vector<pszmem_dump> list, char const* basename
     else if (i == PszHfParEntry)
       par_entry->control({H2D})->file(ofn(".pszhf_pentry"), ToFile);
     else
-      printf("[hf::dump] not a valid segment to dump.");
+      printf("[hf::dump] ! a valid segment to dump.");
   }
 
   return this;
@@ -329,11 +329,11 @@ TPL void HF_CODEC::hf_debug(const std::string SYM_name, void* VAR, int SYM)
   dpct::device_ptr pbase0{0};
   size_t psize0{0};
 
-  // [psz::TODO] not-impl exception
-  // #warning "DPCT1007:99: Migration of cuMemGetAddressRange is not
+  // [psz::TODO] !-impl exception
+  // #warning "DPCT1007:99: Migration of cuMemGetAddressRange is !
   // supported."
   // /*
-  // DPCT1007:99: Migration of cuMemGetAddressRange is not supported.
+  // DPCT1007:99: Migration of cuMemGetAddressRange is ! supported.
   // */
   // cuMemGetAddressRange(&pbase0, &psize0, (dpct::device_ptr)VAR);
   // printf(

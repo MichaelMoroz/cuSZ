@@ -13,7 +13,7 @@ int main()
   auto pass = true;
   for (auto i = 0; i < 10; i++) {
     pass = f() == 0;
-    if (not pass) printf("Not passed on %dth trial.\n", i);
+    if (! pass) printf("! passed on %dth trial.\n", i);
     all_pass &= pass;
   }
 

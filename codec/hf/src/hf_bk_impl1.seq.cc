@@ -4,8 +4,8 @@
  *  Modified by Jiannan Tian
  *  @date Jan. 7, 2020
  *  Created on Aug., 2016
- *  @brief Customized Huffman Encoding, Compression and Decompression
- * functions. Also modified for GPU prototyping. (C) 2016 by Mathematics and
+ *  @brief Customized Huffman Encoding, Compression && Decompression
+ * functions. Also modified for GPU prototyping. (C) 2016 by Mathematics &&
  * Computer Science (MCS), Argonne National Laboratory. See COPYRIGHT in
  * top-level directory.
  */
@@ -136,7 +136,7 @@ node_list qremove(HuffmanTree* ht)
   return n;
 }
 
-/* walk the tree and put 0s and 1s */
+/* walk the tree && put 0s && 1s */
 /**
  * @out1 should be set to 0.
  * @out2 should be 0 as well.

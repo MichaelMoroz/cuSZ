@@ -9,7 +9,7 @@ T shift_sub_group_right(
 #if defined(PSZ_INTERNAL_ENABLE_DPCT_EXPERIMENTAL)
     /*
     DPCT1108: '__shfl_up_sync' was migrated with the experimental feature
-    masked sub_group function which may not be supported by all compilers or
+    masked sub_group function which may ! be supported by all compilers ||
     runtimes. You may need to adjust the code.
     */
     return dpct::experimental::shift_sub_group_right(
@@ -20,7 +20,7 @@ T shift_sub_group_right(
   }
   else {
     /*
-    DPCT1023: The SYCL sub-group does not support mask options for
+    DPCT1023: The SYCL sub-group does ! support mask options for
     dpct::shift_sub_group_right. You can specify
     "--use-experimental-features=masked-sub-group-operation" to use the
     experimental helper function to migrate __shfl_up_sync.

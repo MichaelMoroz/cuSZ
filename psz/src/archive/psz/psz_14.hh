@@ -66,7 +66,7 @@ void c_lorenzo_2d1l(
 
     for (ptrdiff_t i1 = 0; i1 < dims[DIM1]; i1++) {      // NW  NE
         for (ptrdiff_t i0 = 0; i0 < dims[DIM0]; i0++) {  // SW (SE)<- to predict
-            *NW       = i1 == 0 or i0 == 0 ? 0.0 : *(d + (i0 - 1) + (i1 - 1) * dims[DIM0]);
+            *NW       = i1 == 0 || i0 == 0 ? 0.0 : *(d + (i0 - 1) + (i1 - 1) * dims[DIM0]);
             *NE       = i1 == 0 ? 0.0 : *(d + i0 + (i1 - 1) * dims[DIM0]);
             *SW       = i0 == 0 ? 0.0 : *(d + (i0 - 1) + i1 * dims[DIM0]);
             size_t id = i0 + i1 * dims[DIM0];
@@ -110,11 +110,11 @@ void c_lorenzo_3d1l(
     for (ptrdiff_t i2 = 0; i2 < dims[DIM2]; i2++) {          //  | \---> x  NWo NEo
         for (ptrdiff_t i1 = 0; i1 < dims[DIM1]; i1++) {      //  v  v       SWo SEo  NWi  NEi
             for (ptrdiff_t i0 = 0; i0 < dims[DIM0]; i0++) {  //  y   z               SWi (SEi)<- to predict
-                *NWo = i2 == 0 or i1 == 0 or i0 == 0 ? 0 : *(data + (i0 - 1) * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
-                *NEo = i2 == 0 or i1 == 0 ? 0.0 : *(data + i0 * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
-                *SWo = i2 == 0 or i0 == 0 ? 0.0 : *(data + (i0 - 1) * w0 + i1 * w1 + (i2 - 1) * w2);
+                *NWo = i2 == 0 || i1 == 0 || i0 == 0 ? 0 : *(data + (i0 - 1) * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
+                *NEo = i2 == 0 || i1 == 0 ? 0.0 : *(data + i0 * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
+                *SWo = i2 == 0 || i0 == 0 ? 0.0 : *(data + (i0 - 1) * w0 + i1 * w1 + (i2 - 1) * w2);
                 *SEo = i2 == 0 ? 0.0 : *(data + i0 * w0 + i1 * w1 + (i2 - 1) * w2);
-                *NWi = i1 == 0 or i0 == 0 ? 0.0 : *(data + (i0 - 1) * w0 + (i1 - 1) * w1 + i2 * w2);
+                *NWi = i1 == 0 || i0 == 0 ? 0.0 : *(data + (i0 - 1) * w0 + (i1 - 1) * w1 + i2 * w2);
                 *NEi = i1 == 0 ? 0.0 : *(data + i0 * w0 + (i1 - 1) * w1 + i2 * w2);
                 *SWi = i0 == 0 ? 0.0 : *(data + (i0 - 1) * w0 + i1 * w1 + i2 * w2);
 
@@ -159,7 +159,7 @@ void x_lorenzo_2d1l(T* xdata, T* outlier, Q* q, size_t const* const dims, double
 
     for (ptrdiff_t i1 = 0; i1 < dims[DIM1]; i1++) {      // NW  NE
         for (ptrdiff_t i0 = 0; i0 < dims[DIM0]; i0++) {  // SW (SE)<- to predict
-            *NW = i1 == 0 or i0 == 0 ? 0.0 : *(xdata + (i0 - 1) + (i1 - 1) * dims[DIM0]);
+            *NW = i1 == 0 || i0 == 0 ? 0.0 : *(xdata + (i0 - 1) + (i1 - 1) * dims[DIM0]);
             *NE = i1 == 0 ? 0.0 : *(xdata + i0 + (i1 - 1) * dims[DIM0]);
             *SW = i0 == 0 ? 0.0 : *(xdata + (i0 - 1) + i1 * dims[DIM0]);
 
@@ -181,11 +181,11 @@ void x_lorenzo_3d1l(Data* xdata, Data* outlier, Quant* q, size_t const* const di
     for (ptrdiff_t i2 = 0; i2 < dims[DIM2]; i2++) {          // NW  NE
         for (ptrdiff_t i1 = 0; i1 < dims[DIM1]; i1++) {      // NW  NE
             for (ptrdiff_t i0 = 0; i0 < dims[DIM0]; i0++) {  // SW (SE)<- to predict
-                *NWo = i2 == 0 or i1 == 0 or i0 == 0 ? 0.0 : *(xdata + (i0 - 1) * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
-                *NEo = i2 == 0 or i1 == 0 ? 0.0 : *(xdata + i0 * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
-                *SWo = i2 == 0 or i0 == 0 ? 0.0 : *(xdata + (i0 - 1) * w0 + i1 * w1 + (i2 - 1) * w2);
+                *NWo = i2 == 0 || i1 == 0 || i0 == 0 ? 0.0 : *(xdata + (i0 - 1) * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
+                *NEo = i2 == 0 || i1 == 0 ? 0.0 : *(xdata + i0 * w0 + (i1 - 1) * w1 + (i2 - 1) * w2);
+                *SWo = i2 == 0 || i0 == 0 ? 0.0 : *(xdata + (i0 - 1) * w0 + i1 * w1 + (i2 - 1) * w2);
                 *SEo = i2 == 0 ? 0.0 : *(xdata + i0 * w0 + i1 * w1 + (i2 - 1) * w2);
-                *NWi = i1 == 0 or i0 == 0 ? 0.0 : *(xdata + (i0 - 1) * w0 + (i1 - 1) * w1 + i2 * w2);
+                *NWi = i1 == 0 || i0 == 0 ? 0.0 : *(xdata + (i0 - 1) * w0 + (i1 - 1) * w1 + i2 * w2);
                 *NEi = i1 == 0 ? 0.0 : *(xdata + i0 * w0 + (i1 - 1) * w1 + i2 * w2);
                 *SWi = i0 == 0 ? 0.0 : *(xdata + (i0 - 1) * w0 + i1 * w1 + i2 * w2);
 

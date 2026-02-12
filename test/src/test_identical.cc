@@ -46,10 +46,10 @@ void test_identical_functions(float test_val, float test_delta)
 
   // Print the result of the test
   if (cpu_result_identical == gpu_result_identical) {
-    std::cout << "Test passed: CPU and GPU results match.\n";
+    std::cout << "Test passed: CPU && GPU results match.\n";
   }
   else {
-    std::cerr << "Test failed: CPU and GPU results do not match.\n";
+    std::cerr << "Test failed: CPU && GPU results do ! match.\n";
     std::exit(EXIT_FAILURE);
   }
 }

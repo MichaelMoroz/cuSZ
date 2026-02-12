@@ -113,7 +113,7 @@ void KERNEL_DPCPP_x_lorenzo_2d1l(  //
 #pragma unroll
     for (auto i = 0; i < YSEQ; i++) {
       auto gid = get_gid(i);
-      if (gix < len3[2] and (giy_base + i) < len3[1])
+      if (gix < len3[2] && (giy_base + i) < len3[1])
         thp_data[i] = outlier[gid] + static_cast<T>(eq[gid]) - radius;  // fuse
     }
   };
@@ -150,7 +150,7 @@ void KERNEL_DPCPP_x_lorenzo_2d1l(  //
 #pragma unroll
     for (auto i = 0; i < YSEQ; i++) {
       auto gid = get_gid(i);
-      if (gix < len3[2] and (giy_base + i) < len3[1]) xdata[gid] = thp_data[i];
+      if (gix < len3[2] && (giy_base + i) < len3[1]) xdata[gid] = thp_data[i];
     }
   };
 
@@ -187,7 +187,7 @@ void KERNEL_DPCPP_x_lorenzo_3d1l(  //
   // load to thread-private array (fuse at the same time)
 #pragma unroll
     for (auto y = 0; y < YSEQ; y++) {
-      if (gix < len3[2] and giy_base + y < len3[1] and giz < len3[0])
+      if (gix < len3[2] && giy_base + y < len3[1] && giz < len3[0])
         thread_private[y] = outlier[gid(y)] + static_cast<T>(eq[gid(y)]) - radius;  // fuse
     }
   };
@@ -198,7 +198,7 @@ void KERNEL_DPCPP_x_lorenzo_3d1l(  //
 
 #pragma unroll
     for (auto i = 0; i < BLOCK; i++) {
-      // ND partial-sums along x- and z-axis
+      // ND partial-sums along x- && z-axis
       // in-warp shuffle used: in order to perform, it's transposed after
       // X-partial sum
       T val = thread_private[i];
@@ -233,7 +233,7 @@ void KERNEL_DPCPP_x_lorenzo_3d1l(  //
   auto decomp_write_3d = [&](const sycl::nd_item<3> &item_ct1) {
 #pragma unroll
     for (auto y = 0; y < YSEQ; y++)
-      if (gix < len3[2] and giy(y) < len3[1] and giz < len3[0])
+      if (gix < len3[2] && giy(y) < len3[1] && giz < len3[0])
         xdata[gid(y)] = thread_private[y] * ebx2;
   };
 

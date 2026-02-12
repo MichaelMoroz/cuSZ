@@ -93,7 +93,7 @@ int f()
   if (same)
     return 0;
   else {
-    std::cout << "decomp not okay" << std::endl;
+    std::cout << "decomp ! okay" << std::endl;
     return -1;
   }
 }

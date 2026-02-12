@@ -40,7 +40,7 @@ psz_compressor* psz_create(
   pszctx_set_len(comp->ctx, uncomp_len3);
   phf_coarse_tune(
       comp->ctx->len_linear, &comp->ctx->header->vle_sublen, &comp->ctx->header->vle_pardeg);
-  if (dtype == F4 or dtype == F8)
+  if (dtype == F4 || dtype == F8)
     comp->compressor = dtype == F4 ? (void*)(new psz::CompressorF4(comp->ctx))
                                    : (void*)(new psz::CompressorF8(comp->ctx));
   else
@@ -59,7 +59,7 @@ psz_compressor* psz_create_default(psz_dtype const dtype, psz_len3 const uncomp_
   pszctx_set_len(comp->ctx, uncomp_len3);
   phf_coarse_tune(
       comp->ctx->len_linear, &comp->ctx->header->vle_sublen, &comp->ctx->header->vle_pardeg);
-  if (dtype == F4 or dtype == F8)
+  if (dtype == F4 || dtype == F8)
     comp->compressor = dtype == F4 ? (void*)(new psz::CompressorF4(comp->ctx))
                                    : (void*)(new psz::CompressorF8(comp->ctx));
   else
@@ -77,7 +77,7 @@ psz_compressor* psz_create_from_context(psz_ctx* const ctx, psz_len3 uncomp_len3
 
   phf_coarse_tune(
       comp->ctx->len_linear, &comp->ctx->header->vle_sublen, &comp->ctx->header->vle_pardeg);
-  if (dtype == F4 or dtype == F8)
+  if (dtype == F4 || dtype == F8)
     comp->compressor = dtype == F4 ? (void*)(new psz::CompressorF4(comp->ctx))
                                    : (void*)(new psz::CompressorF8(comp->ctx));
   else
@@ -93,7 +93,7 @@ psz_compressor* psz_create_from_header(psz_header* const h)
 
   comp->ctx->header = h;
 
-  if (h->dtype == F4 or h->dtype == F8)
+  if (h->dtype == F4 || h->dtype == F8)
     comp->compressor = h->dtype == F4 ? (void*)(new psz::CompressorF4(comp->ctx))
                                       : (void*)(new psz::CompressorF8(comp->ctx));
   else
@@ -158,7 +158,7 @@ pszerror psz_compress(
   }
   else {
     // TODO put to log-queue
-    cerr << std::string(__FUNCTION__) + ": Type is not supported." << endl;
+    cerr << std::string(__FUNCTION__) + ": Type is ! supported." << endl;
     return PSZ_ABORT_UNSUPPORTED_TYPE;
   }
 
@@ -186,7 +186,7 @@ pszerror psz_decompress(
   }
   else {
     // TODO put to log-queue
-    cerr << std::string(__FUNCTION__) + ": Type is not supported." << endl;
+    cerr << std::string(__FUNCTION__) + ": Type is ! supported." << endl;
     return PSZ_ABORT_UNSUPPORTED_TYPE;
   }
 
@@ -206,7 +206,7 @@ pszerror psz_clear_buffer(psz_compressor* comp)
   }
   else {
     // TODO put to log-queue
-    cerr << std::string(__FUNCTION__) + ": Type is not supported." << endl;
+    cerr << std::string(__FUNCTION__) + ": Type is ! supported." << endl;
     return PSZ_ABORT_UNSUPPORTED_TYPE;
   }
 
@@ -240,7 +240,8 @@ psz_resource* psz_create_resource_manager_from_header(psz_header* header, void* 
   m->len_linear = header->len.x * header->len.y * header->len.z;
   m->cli = nullptr;
 
-  m->buf = header->dtype == F4 ? CP<f4, u2>::compress_init(m) : CP<f8, u2>::compress_init(m);
+  m->buf = header->dtype == F4 ? CP<f4, u2>::decompress_init(m->header)
+                               : CP<f8, u2>::decompress_init(m->header);
 
   m->stream = stream;
 

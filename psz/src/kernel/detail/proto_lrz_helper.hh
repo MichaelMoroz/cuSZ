@@ -42,10 +42,10 @@
   /* check data access validity */                                     \
   auto check_boundary1 = [&]() { return gx() < data_len3.x; };         \
   auto check_boundary2 = [&]() {                                       \
-    return gx() < data_len3.x and gy() < data_len3.y;                  \
+    return gx() < data_len3.x && gy() < data_len3.y;                  \
   };                                                                   \
   auto check_boundary3 = [&]() {                                       \
-    return check_boundary2() and gz() < data_len3.z;                   \
+    return check_boundary2() && gz() < data_len3.z;                   \
   };
 
 #endif /* D5AFF1E5_1D3A_4FB8_A8DF_3785847FCBF4 */

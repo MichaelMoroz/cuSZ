@@ -130,16 +130,16 @@ int GPU_PROTO_x_lorenzo_nd<T, Eq>::kernel(
   };
 
   auto ndim = [&]() {
-    if (len.z == 1 and len.y == 1)
+    if (len.z == 1 && len.y == 1)
       return 1;
-    else if (len.z == 1 and len.y != 1)
+    else if (len.z == 1 && len.y != 1)
       return 2;
     else
       return 3;
   };
 
-  constexpr auto Tile1D = dim3(256, 1, 1), Tile2D = dim3(16, 16, 1), Tile3D = dim3(8, 8, 8);
-  constexpr auto Block1D = dim3(256, 1, 1), Block2D = dim3(16, 16, 1), Block3D = dim3(8, 8, 8);
+  const auto Tile1D = dim3(256, 1, 1), Tile2D = dim3(16, 16, 1), Tile3D = dim3(8, 8, 8);
+  const auto Block1D = dim3(256, 1, 1), Block2D = dim3(16, 16, 1), Block3D = dim3(8, 8, 8);
 
   auto Grid1D = divide3(len, Tile1D), Grid2D = divide3(len, Tile2D), Grid3D = divide3(len, Tile3D);
 

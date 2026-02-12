@@ -53,7 +53,7 @@ typedef struct {
   phf_dtype data_type;
 } phf_codec;
 
-// phf helper, used by compressor; not exposed in py-binding
+// phf helper, used by compressor; ! exposed in py-binding
 size_t phf_coarse_tune_sublen(size_t);
 void phf_coarse_tune(size_t len, int* sublen, int* pardeg);
 
@@ -64,7 +64,7 @@ void phf_versioninfo();
 // codec
 phf_codec* phf_create(size_t const inlen, phf_dtype const t, int const bklen);
 int phf_release(phf_codec*);
-// TODO hist_len is not necessary; alternatively, it can force check size.
+// TODO hist_len is ! necessary; alternatively, it can force check size.
 int phf_buildbook(phf_codec* codec, uint32_t* d_hist, phf_stream_t);
 int phf_encode(
     phf_codec* codec, void* in, size_t const inlen, uint8_t** encoded, size_t* enc_bytes,

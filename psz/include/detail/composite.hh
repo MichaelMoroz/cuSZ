@@ -137,7 +137,7 @@ struct PredFunc {
   static constexpr bool stat_local_disabled = UseStatLocal == Toggle::StatLocalDisabled;
   static constexpr bool stat_global_enabled = UseStatGlobal == Toggle::StatGlobalEnabled;
   static_assert(
-      not(stat_local_disabled and stat_global_enabled),
+      !(stat_local_disabled && stat_global_enabled),
       "UseLocalStat must be enalbed when UseGlobalStat is enabled.");
 };
 

@@ -27,7 +27,7 @@ __global__ void KERNEL_CUHIP_prototype_c_lorenzo_1d1l(
   T candidate = delta + radius;
   if (check_boundary1()) {  // postquant
     out_eq[id] = quantizable * static_cast<Eq>(candidate);
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = atomicAdd(out_cn, 1);
       out_cidx[cur_idx] = id;
       out_cval[cur_idx] = candidate;
@@ -57,13 +57,13 @@ __global__ void KERNEL_CUHIP_prototype_c_lorenzo_2d1l(
 
   T delta = data(0, 0) - ((x > 0 ? data(-1, 0) : 0) +             // dist=1
                           (y > 0 ? data(0, -1) : 0) -             // dist=1
-                          (x > 0 and y > 0 ? data(-1, -1) : 0));  // dist=2
+                          (x > 0 && y > 0 ? data(-1, -1) : 0));  // dist=2
 
   bool quantizable = fabs(delta) < radius;
   T candidate = delta + radius;
   if (check_boundary2()) {
     out_eq[id] = quantizable * static_cast<Eq>(candidate);
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = atomicAdd(out_cn, 1);
       out_cidx[cur_idx] = id;
       out_cval[cur_idx] = candidate;
@@ -91,10 +91,10 @@ __global__ void KERNEL_CUHIP_prototype_c_lorenzo_3d1l(
   if (check_boundary3()) { data(0, 0, 0) = round(in_data[id] * ebx2_r); }
   __syncthreads();
 
-  T delta = data(0, 0, 0) - ((z > 0 and y > 0 and x > 0 ? data(-1, -1, -1) : 0)  // dist=3
-                             - (y > 0 and x > 0 ? data(-1, -1, 0) : 0)           // dist=2
-                             - (z > 0 and x > 0 ? data(-1, 0, -1) : 0)           //
-                             - (z > 0 and y > 0 ? data(0, -1, -1) : 0)           //
+  T delta = data(0, 0, 0) - ((z > 0 && y > 0 && x > 0 ? data(-1, -1, -1) : 0)  // dist=3
+                             - (y > 0 && x > 0 ? data(-1, -1, 0) : 0)           // dist=2
+                             - (z > 0 && x > 0 ? data(-1, 0, -1) : 0)           //
+                             - (z > 0 && y > 0 ? data(0, -1, -1) : 0)           //
                              + (x > 0 ? data(-1, 0, 0) : 0)                      // dist=1
                              + (y > 0 ? data(0, -1, 0) : 0)                      //
                              + (z > 0 ? data(0, 0, -1) : 0));                    //
@@ -103,7 +103,7 @@ __global__ void KERNEL_CUHIP_prototype_c_lorenzo_3d1l(
   T candidate = delta + radius;
   if (check_boundary3()) {
     out_eq[id] = quantizable * static_cast<Eq>(candidate);
-    if (not quantizable) {
+    if (! quantizable) {
       auto cur_idx = atomicAdd(out_cn, 1);
       out_cidx[cur_idx] = id;
       out_cval[cur_idx] = candidate;
@@ -126,9 +126,9 @@ int GPU_PROTO_c_lorenzo_nd_with_outlier<T, Eq>::kernel(
   };
 
   auto ndim = [&]() {
-    if (len.z == 1 and len.y == 1)
+    if (len.z == 1 && len.y == 1)
       return 1;
-    else if (len.z == 1 and len.y != 1)
+    else if (len.z == 1 && len.y != 1)
       return 2;
     else
       return 3;
@@ -137,8 +137,8 @@ int GPU_PROTO_c_lorenzo_nd_with_outlier<T, Eq>::kernel(
   using Compact = _portable::compact_gpu<T>;
   auto ot = (Compact*)out_outlier;
 
-  constexpr auto Tile1D = dim3(256, 1, 1), Tile2D = dim3(16, 16, 1), Tile3D = dim3(8, 8, 8);
-  constexpr auto Block1D = dim3(256, 1, 1), Block2D = dim3(16, 16, 1), Block3D = dim3(8, 8, 8);
+  const auto Tile1D = dim3(256, 1, 1), Tile2D = dim3(16, 16, 1), Tile3D = dim3(8, 8, 8);
+  const auto Block1D = dim3(256, 1, 1), Block2D = dim3(16, 16, 1), Block3D = dim3(8, 8, 8);
 
   auto Grid1D = divide3(len, Tile1D), Grid2D = divide3(len, Tile2D), Grid3D = divide3(len, Tile3D);
 

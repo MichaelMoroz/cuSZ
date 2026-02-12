@@ -42,7 +42,7 @@ __global__ void binning2d(Data* input, Data* output, size_t d0, size_t d1, size_
 
     __shared__ Data s[tBLK][tBLK];
 
-    if (yid >= new_d1 or xid >= new_d0) return;
+    if (yid >= new_d1 || xid >= new_d0) return;
 
     int xblk = (xid + 1) * DOWNSCALE_FACTOR >= d0 ? d0 - xid * DOWNSCALE_FACTOR : DOWNSCALE_FACTOR;
     int yblk = (yid + 1) * DOWNSCALE_FACTOR >= d1 ? d1 - yid * DOWNSCALE_FACTOR : DOWNSCALE_FACTOR;

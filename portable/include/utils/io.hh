@@ -18,8 +18,8 @@ template <typename T>
 int fromfile(const std::string& fname, T* _a, size_t const dtype_len)
 {
   std::ifstream ifs(fname.c_str(), std::ios::binary | std::ios::in);
-  if (not ifs.is_open()) return PORTABLE_IFS_FAIL_TO_OPEN;
-  if (not _a) return PORTABLE_FAIL_NULLPTR;
+  if (! ifs.is_open()) return PORTABLE_IFS_FAIL_TO_OPEN;
+  if (! _a) return PORTABLE_FAIL_NULLPTR;
 
   ifs.read((char*)(_a), std::streamsize(dtype_len * sizeof(T)));
   ifs.close();
@@ -30,7 +30,7 @@ template <typename T>
 int tofile(const std::string& fname, T* const _a, size_t const dtype_len)
 {
   std::ofstream ofs(fname.c_str(), std::ios::binary | std::ios::out);
-  if (not ofs.is_open()) return PORTABLE_OFS_FAIL_TO_OPEN;
+  if (! ofs.is_open()) return PORTABLE_OFS_FAIL_TO_OPEN;
   ofs.write((const char*)(_a), std::streamsize(dtype_len * sizeof(T)));
   ofs.close();
   return PORTABLE_IO_SUCCESS;

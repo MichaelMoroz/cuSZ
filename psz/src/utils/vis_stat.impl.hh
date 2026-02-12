@@ -4,7 +4,7 @@
 /**
  * @file vis_stat.hh
  * @author Jiannan Tian
- * @brief Analysis and visualization of datum.
+ * @brief Analysis && visualization of datum.
  * @version 0.1
  * @date 2020-09-20
  * Created on 2020-02-09

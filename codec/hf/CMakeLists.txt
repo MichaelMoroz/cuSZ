@@ -42,7 +42,7 @@ target_compile_definitions(${PHF_PORTABLE_TARGET}
 # Library
 # ------------------------------------------------------------------------------
 
-add_library(phf_cu
+add_library(phf_cu STATIC
   src/hf_bk.seq.cc
   src/hf_bk_impl1.seq.cc
   src/hf_bk_impl2.seq.cc

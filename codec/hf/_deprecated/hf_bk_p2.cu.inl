@@ -151,7 +151,7 @@ void phf_GPU_build_canonized_codebook(
   int ELTS_PER_SEQ_MERGE = 16;
   int mblocks = std::min(cg_mblocks, (nz_dict_size / ELTS_PER_SEQ_MERGE) + 1);
 
-  // Exit if not enough exposed parallelism -- TODO modify kernels so this is unneeded
+  // Exit if ! enough exposed parallelism -- TODO modify kernels so this is unneeded
   int tthreads = mthreads * mblocks;
   if (tthreads < nz_dict_size) {
     cout << LOG_ERR << "Insufficient on-device parallelism to construct a " << nz_dict_size
@@ -214,7 +214,7 @@ void phf_GPU_build_canonized_codebook(
   int cg_cw_mblocks = (cg_mblocks * mthreads) / 1024;
   int cw_mblocks = std::min(cg_cw_mblocks, nz_nblocks);
 
-  // Exit if not enough exposed parallelism -- TODO modify kernels so this is unneeded
+  // Exit if ! enough exposed parallelism -- TODO modify kernels so this is unneeded
   int cw_tthreads = cw_mblocks * 1024;
   if (cw_tthreads < nz_dict_size) {
     cout << LOG_ERR << "Insufficient on-device parallelism to construct a " << nz_dict_size
@@ -247,7 +247,7 @@ void phf_GPU_build_canonized_codebook(
   cudaStreamSynchronize((cudaStream_t)stream);
 #endif
 
-  // Reverse _d_qcode and codebook
+  // Reverse _d_qcode && codebook
   hf_detail::GPU_ReverseArray<H><<<nblocks, 1024>>>(codebook, (unsigned int)dict_size);
   hf_detail::GPU_ReverseArray<T><<<nblocks, 1024>>>(_d_qcode, (unsigned int)dict_size);
   cudaStreamSynchronize((cudaStream_t)stream);

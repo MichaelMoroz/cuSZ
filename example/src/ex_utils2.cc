@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
 void print_help()
@@ -33,39 +34,39 @@ Arguments parse_arguments(int argc, char* argv[])
 
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
-    if (arg == "--fname-prefix" and i + 1 < argc) {
+    if (arg == "--fname-prefix" && i + 1 < argc) {
       args.fname_prefix = argv[++i];
       fname_prefix_set = true;
     }
-    else if (arg == "--fname-suffix" and i + 1 < argc) {
+    else if (arg == "--fname-suffix" && i + 1 < argc) {
       args.fname_suffix = argv[++i];
       fname_suffix_set = true;
     }
-    else if (arg == "--from" and i + 1 < argc) {
+    else if (arg == "--from" && i + 1 < argc) {
       args.from_number = atoi(argv[++i]);
       from_number_set = true;
     }
-    else if (arg == "--to" and i + 1 < argc) {
+    else if (arg == "--to" && i + 1 < argc) {
       args.to_number = atoi(argv[++i]);
       to_number_set = true;
     }
-    else if (arg == "-x" and i + 1 < argc) {
+    else if (arg == "-x" && i + 1 < argc) {
       args.x = atoi(argv[++i]);
       x_set = true;
     }
-    else if (arg == "-y" and i + 1 < argc) {
+    else if (arg == "-y" && i + 1 < argc) {
       args.y = atoi(argv[++i]);
       y_set = true;
     }
-    else if (arg == "-z" and i + 1 < argc) {
+    else if (arg == "-z" && i + 1 < argc) {
       args.z = atoi(argv[++i]);
       z_set = true;
     }
-    else if (arg == "-r" and i + 1 < argc) {
+    else if (arg == "-r" && i + 1 < argc) {
       args.radius = atoi(argv[++i]);
       radius_set = true;
     }
-    else if (arg == "--codec" and i + 1 < argc) {
+    else if (arg == "--codec" && i + 1 < argc) {
       args.codec_type = std::string(argv[++i]) == "fzg" ? FZCodec : Huffman;
     }
     else if (arg == "--help") {
@@ -79,8 +80,8 @@ Arguments parse_arguments(int argc, char* argv[])
     }
   }
 
-  if (not fname_prefix_set or not fname_suffix_set or not from_number_set or not to_number_set or
-      not x_set or not y_set or not z_set) {
+  if (! fname_prefix_set || ! fname_suffix_set || ! from_number_set || ! to_number_set ||
+      ! x_set || ! y_set || ! z_set) {
     std::cerr << "Error: Missing required arguments." << std::endl;
     print_help();
     exit(1);
